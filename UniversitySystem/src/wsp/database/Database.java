@@ -82,14 +82,36 @@ public class Database implements Serializable {
 	 */
 	
 	private ArrayList<String> reports;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
+
+	private ArrayList<News> allNews;
 	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->
 	 * @generated
 	 */
-	public Database() {
-		super();
+	private Database() {
+		loginsAndPasswords = new HashMap<>();
+		users = new HashSet<>();
+		courses = new HashSet<>();
+		faculties = new HashSet<>();
+		userActions = new ArrayList<>();
+		messages = new ArrayList<>();
+		reports = new ArrayList<>();
+		allNews = new ArrayList<>();
+
+		loginsAndPasswords.put("admin", new HashMap<>());
+		loginsAndPasswords.put("manager", new HashMap<>());
+		loginsAndPasswords.put("teacher", new HashMap<>());
+		loginsAndPasswords.put("librarian", new HashMap<>());
+		loginsAndPasswords.put("student", new HashMap<>());
 	}
 
 	/**
@@ -100,8 +122,10 @@ public class Database implements Serializable {
 	 */
 	
 	public static Database getInstance() {
-		// TODO implement me
-		return null;	
+		if(instance == null) {
+			instance = new Database();
+		}
+		return instance;
 	}
 	
 	/**
@@ -112,8 +136,7 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<User> viewUsers() {
-		// TODO implement me
-		return null;	
+		return users;
 	}
 	
 	/**
@@ -123,9 +146,8 @@ public class Database implements Serializable {
 	 * @ordered
 	 */
 	
-	public void addUser(User parameter) {
-		// TODO implement me
-
+	public void addUser(User user) {
+		users.add(user);
 	}
 	
 	/**
@@ -136,8 +158,14 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Student> getStudents() {
-		// TODO implement me
-		return null;	
+		HashSet<Student> students = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Student) {
+				students.add((Student) user);
+			}
+		}
+		return students;
 	}
 	
 	/**
@@ -148,8 +176,14 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Teacher> getTeachers() {
-		// TODO implement me
-		return null;	
+		HashSet<Teacher> teachers = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Teacher) {
+				teachers.add((Teacher) user);
+			}
+		}
+		return teachers;
 	}
 	
 	/**
@@ -160,8 +194,14 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Manager> getManagers() {
-		// TODO implement me
-		return null;	
+		HashSet<Manager> managers = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Manager) {
+				managers.add((Manager) user);
+			}
+		}
+		return managers;
 	}
 	
 	/**
@@ -172,8 +212,14 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Admin> getAdmins() {
-		// TODO implement me
-		return null;	
+		HashSet<Admin> admins = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Admin) {
+				admins.add((Admin) user);
+			}
+		}
+		return admins;
 	}
 	
 	/**
@@ -184,8 +230,14 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Librarian> getLibrarians() {
-		// TODO implement me
-		return null;	
+		HashSet<Librarian> librarians = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Librarian) {
+				librarians.add((Librarian) user);
+			}
+		}
+		return librarians;
 	}
 	
 	/**
@@ -196,8 +248,7 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Course> getCourses() {
-		// TODO implement me
-		return null;	
+		return courses;
 	}
 	
 	/**
@@ -208,8 +259,7 @@ public class Database implements Serializable {
 	 */
 	
 	public HashSet<Faculty> getFaculties() {
-		// TODO implement me
-		return null;	
+		return faculties;
 	}
 	
 	/**
@@ -220,8 +270,7 @@ public class Database implements Serializable {
 	 */
 	
 	public ArrayList<String> getUserActions() {
-		// TODO implement me
-		return null;	
+		return userActions;
 	}
 	
 	/**
@@ -232,8 +281,7 @@ public class Database implements Serializable {
 	 */
 	
 	public ArrayList<Message> getMessages() {
-		// TODO implement me
-		return null;	
+		return messages;
 	}
 	
 	/**
@@ -244,8 +292,7 @@ public class Database implements Serializable {
 	 */
 	
 	public ArrayList<String> getReports() {
-		// TODO implement me
-		return null;	
+		return reports;
 	}
 	
 	/**
@@ -258,6 +305,10 @@ public class Database implements Serializable {
 	public HashSet<String> getUserLoginAndPassword(User user) {
 		// TODO implement me
 		return null;	
+	}
+
+	public HashMap<String , String> getUserLoginsAndPasswords(String user) {
+		return loginsAndPasswords.get(user);
 	}
 	
 	/**

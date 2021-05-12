@@ -1,5 +1,6 @@
 package wsp.interfaces;
 
+import wsp.exceptions.IllegalOperationException;
 import wsp.models.*;
 
 /**
@@ -7,7 +8,7 @@ import wsp.models.*;
  * <!--  end-user-doc  -->
  * @generated
  */
-public  interface CanRateTeacher {
+public interface CanRateTeacher {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->
@@ -15,5 +16,5 @@ public  interface CanRateTeacher {
 	 * @ordered
 	 */
 	
-	void rateTeacher(Teacher teacher, double rating);
+	void rateTeacher(Teacher teacher, double rating) throws IllegalOperationException;
 }

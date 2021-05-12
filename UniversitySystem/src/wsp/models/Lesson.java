@@ -1,6 +1,9 @@
 package wsp.models;
 
 import wsp.enums.LessonType;
+import wsp.exceptions.IllegalOperationException;
+import wsp.interfaces.CanAlterCourseData;
+
 import java.util.Date;
 
 /**
@@ -50,7 +53,6 @@ public class Lesson {
 	 */
 	
 	public LessonType getType() {
-		// TODO implement me
 		return type;
 	}
 	
@@ -62,7 +64,6 @@ public class Lesson {
 	 */
 	
 	public Date getTime() {
-		// TODO implement me
 		return time;
 	}
 	
@@ -73,8 +74,11 @@ public class Lesson {
 	 * @ordered
 	 */
 	
-	public void setTime(Date parameter) {
-		// TODO implement me
-
+	public void setTime(User user, Date time) throws IllegalOperationException {
+		if(user instanceof CanAlterCourseData) {
+			this.time = time;
+		} else {
+			throw new IllegalOperationException("Only teacher or manager can change lessons!");
+		}
 	}
 }

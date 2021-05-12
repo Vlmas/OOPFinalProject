@@ -5,4 +5,4 @@ package wsp.interfaces;
  * <!--  end-user-doc  -->
  * @generated
  */
-public  interface CanAlterUserData {}
+public interface CanAlterUserData {}

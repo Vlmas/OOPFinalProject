@@ -1,7 +1,10 @@
 package wsp.models;
 
 import wsp.enums.TeacherTitle;
+import wsp.exceptions.IllegalOperationException;
 import wsp.interfaces.CanAlterCourseData;
+import wsp.interfaces.CanRateTeacher;
+
 import java.util.*;
 
 /**
@@ -56,6 +59,17 @@ public class Teacher extends Employee implements CanAlterCourseData {
 		super();
 	}
 
+	public Teacher(String name, String surname, String id, String login, String password, double salary,
+				   ArrayList<Message> messages, TeacherTitle title,
+				   int experience, ArrayList<Course> courses, double rating) {
+
+		super(name, surname, id, login, password, salary, messages);
+		this.title = title;
+		this.experience = experience;
+		this.courses = courses;
+		this.rating = rating;
+	}
+
 	@Override
 	public void sendMessage() {
 
@@ -70,7 +84,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	
 	public TeacherTitle getTitle() {
 		// TODO implement me
-		return TeacherTitle.TUTOR;	
+		return title;
 	}
 	
 	/**
@@ -82,7 +96,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	
 	public int getExperience() {
 		// TODO implement me
-		return 0;	
+		return experience;
 	}
 	
 	/**
@@ -94,7 +108,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	
 	public ArrayList<Course> getCourses() {
 		// TODO implement me
-		return null;	
+		return courses;
 	}
 	
 	/**
@@ -106,7 +120,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	
 	public double getRating() {
 		// TODO implement me
-		return 0.0;	
+		return rating;
 	}
 	
 	/**
@@ -116,7 +130,28 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 * @ordered
 	 */
 	
-	public void setCourse(Course parameter) {
+	public void setCourse(Course course) {
+		// TODO implement me
+
+	}
+
+	public void setRating(User user, double rating) throws IllegalOperationException {
+		int count = 0x000F; //TODO temporary
+		if(user instanceof CanRateTeacher) {
+			this.rating += (rating - this.rating) / count;
+		} else {
+			throw new IllegalOperationException("Only students can rate teachers!");
+		}
+	}
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
+	
+	public void putMark(Student student, Course course, Mark mark) {
 		// TODO implement me
 
 	}
@@ -128,7 +163,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 * @ordered
 	 */
 	
-	public void putMark(Student parameter, Course parameter2, Mark parameter3) {
+	public void addCourseFile(Course course, CourseFile courseFile) {
 		// TODO implement me
 
 	}
@@ -140,7 +175,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 * @ordered
 	 */
 	
-	public void addCourseFile(Course parameter, CourseFile parameter2) {
+	public void deleteCourseFile(Course course) {
 		// TODO implement me
 
 	}
@@ -152,7 +187,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 * @ordered
 	 */
 	
-	public void deleteCourseFile(Course parameter) {
+	public void changeMark(Student student, Course course, Mark mark) {
 		// TODO implement me
 
 	}
@@ -164,19 +199,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 * @ordered
 	 */
 	
-	public void changeMark(Student parameter, Course parameter2, Mark parameter3) {
-		// TODO implement me
-
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Course getCourse(String parameter) {
+	public Course getCourse(String name) {
 		// TODO implement me
 		return null;	
 	}

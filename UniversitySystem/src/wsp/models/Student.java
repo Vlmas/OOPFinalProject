@@ -1,6 +1,7 @@
 package wsp.models;
 
 import wsp.enums.*;
+import wsp.exceptions.IllegalOperationException;
 import wsp.interfaces.CanRateTeacher;
 import java.util.*;
 
@@ -321,7 +322,7 @@ public class Student extends User implements CanRateTeacher {
 	 */
 
 	@Override
-	public void rateTeacher(Teacher teacher, double rating) {
-
+	public void rateTeacher(Teacher teacher, double rating) throws IllegalOperationException {
+		teacher.setRating(this, rating);
 	}
 }
