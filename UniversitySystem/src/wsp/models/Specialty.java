@@ -1,12 +1,14 @@
 package wsp.models;
 
+import java.io.Serializable;
+
 /**
  * <!-- begin-user-doc -->
  * <!--  end-user-doc  -->
  * @generated
  */
 
-public class Specialty {
+public class Specialty implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

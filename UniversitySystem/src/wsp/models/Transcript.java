@@ -1,5 +1,6 @@
 package wsp.models;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * @generated
  */
 
-public class Transcript {
+public class Transcript implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

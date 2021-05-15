@@ -2,13 +2,15 @@ package wsp.models;
 
 import wsp.enums.Grade;
 
+import java.io.Serializable;
+
 /**
  * <!-- begin-user-doc -->
  * <!--  end-user-doc  -->
  * @generated
  */
 
-public class Mark {
+public class Mark implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

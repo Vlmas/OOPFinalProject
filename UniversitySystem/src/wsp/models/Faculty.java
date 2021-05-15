@@ -1,6 +1,7 @@
 package wsp.models;
 
 import wsp.enums.FacultyName;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -9,7 +10,7 @@ import java.util.*;
  * @generated
  */
 
-public class Faculty {
+public class Faculty implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

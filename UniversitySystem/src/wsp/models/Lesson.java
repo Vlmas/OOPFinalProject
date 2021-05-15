@@ -3,7 +3,7 @@ package wsp.models;
 import wsp.enums.LessonType;
 import wsp.exceptions.IllegalOperationException;
 import wsp.interfaces.CanAlterCourseData;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Date;
  * @generated
  */
 
-public class Lesson {
+public class Lesson implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

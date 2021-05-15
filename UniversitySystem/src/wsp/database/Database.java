@@ -1,5 +1,6 @@
 package wsp.database;
 
+import wsp.enums.FacultyName;
 import wsp.models.*;
 import java.io.Serializable;
 import java.util.*;
@@ -107,11 +108,35 @@ public class Database implements Serializable {
 		reports = new ArrayList<>();
 		allNews = new ArrayList<>();
 
-		loginsAndPasswords.put("admin", new HashMap<>());
-		loginsAndPasswords.put("manager", new HashMap<>());
-		loginsAndPasswords.put("teacher", new HashMap<>());
-		loginsAndPasswords.put("librarian", new HashMap<>());
-		loginsAndPasswords.put("student", new HashMap<>());
+		loginsAndPasswords.putIfAbsent("admin", new HashMap<>());
+		loginsAndPasswords.putIfAbsent("manager", new HashMap<>());
+		loginsAndPasswords.putIfAbsent("teacher", new HashMap<>());
+		loginsAndPasswords.putIfAbsent("librarian", new HashMap<>());
+		loginsAndPasswords.putIfAbsent("student", new HashMap<>());
+
+		faculties.add(new Faculty(FacultyName.FIT, new ArrayList<>() {{
+			add(new Specialty("Computer Systems and Software"));
+			add(new Specialty("Information Systems"));
+			add(new Specialty("Automation and Control"));
+		}}));
+		faculties.add(new Faculty(FacultyName.GEF, new ArrayList<>()));
+		faculties.add(new Faculty(FacultyName.SECMC, new ArrayList<>() {{
+			add(new Specialty("Mathematical and Computer Modeling"));
+		}}));
+		faculties.add(new Faculty(FacultyName.BS, new ArrayList<>() {{
+			add(new Specialty("Management"));
+			add(new Specialty("Finance"));
+			add(new Specialty("Marketing"));
+			add(new Specialty("Accounting"));
+		}}));
+		faculties.add(new Faculty(FacultyName.FOGI, new ArrayList<>() {{
+			add(new Specialty("Oil and Gas Business"));
+		}}));
+		faculties.add((new Faculty(FacultyName.KMA, new ArrayList<>() {{
+			add(new Specialty("Marine Engineering"));
+		}})));
+
+		addUser(new Admin("Admin", "Admin", "10BD2367", "admin@kbtu.kz", "admin", 500000, new ArrayList<>()));
 	}
 
 	/**
@@ -135,7 +160,7 @@ public class Database implements Serializable {
 	 * @ordered
 	 */
 	
-	public HashSet<User> viewUsers() {
+	public HashSet<User> getUsers() {
 		return users;
 	}
 	
@@ -148,6 +173,7 @@ public class Database implements Serializable {
 	
 	public void addUser(User user) {
 		users.add(user);
+		loginsAndPasswords.get(user.getClass().getSimpleName().toLowerCase()).put(user.getLogin(), user.getPassword());
 	}
 	
 	/**
@@ -302,12 +328,19 @@ public class Database implements Serializable {
 	 * @ordered
 	 */
 	
-	public HashSet<String> getUserLoginAndPassword(User user) {
-		// TODO implement me
-		return null;	
+	public User getUserByLoginAndPassword(String login, String password) {
+		User type = null;
+
+		for(User user : users) {
+			if(user.getLogin().equals(login) && user.getPassword().equals(password)) {
+				type = user;
+			}
+		}
+
+		return type;
 	}
 
-	public HashMap<String , String> getUserLoginsAndPasswords(String user) {
+	public HashMap<String, String> getUserLoginsAndPasswords(String user) {
 		return loginsAndPasswords.get(user);
 	}
 	
@@ -318,9 +351,8 @@ public class Database implements Serializable {
 	 * @ordered
 	 */
 	
-	public void setUserLoginAndPassword(User user, String login, String password) {
-		// TODO implement me
-
+	public void setUserLoginAndPassword(String user, String login, String password) {
+		loginsAndPasswords.get(user).put(login, password);
 	}
 	
 	/**
@@ -331,8 +363,7 @@ public class Database implements Serializable {
 	 */
 	
 	public void addMessage(Message message) {
-		// TODO implement me
-
+		messages.add(message);
 	}
 	
 	/**
@@ -343,8 +374,7 @@ public class Database implements Serializable {
 	 */
 	
 	public void addReport(String report) {
-		// TODO implement me
-
+		reports.add(report);
 	}
 	
 	/**
@@ -355,8 +385,7 @@ public class Database implements Serializable {
 	 */
 	
 	public void addUserAction(String action) {
-		// TODO implement me
-
+		userActions.add(action);
 	}
 	
 	/**
@@ -367,8 +396,7 @@ public class Database implements Serializable {
 	 */
 	
 	public void addFaculty(Faculty faculty) {
-		// TODO implement me
-
+		faculties.add(faculty);
 	}
 	
 	/**
@@ -379,7 +407,6 @@ public class Database implements Serializable {
 	 */
 	
 	public void addCourse(Course course) {
-		// TODO implement me
-
+		courses.add(course);
 	}
 }

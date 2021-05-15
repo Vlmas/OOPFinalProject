@@ -1,6 +1,7 @@
 package wsp.models;
 
 import wsp.enums.AttestationSeason;
+import java.io.Serializable;
 
 /**
  * <!-- begin-user-doc -->
@@ -8,7 +9,7 @@ import wsp.enums.AttestationSeason;
  * @generated
  */
 
-public class Period {
+public class Period implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->

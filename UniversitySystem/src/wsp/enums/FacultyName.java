@@ -8,9 +8,8 @@ package wsp.enums;
 public enum FacultyName {
 	FIT,
 	GEF,
-	MCM,
+	SECMC,
 	FOGI,
 	BS,
-	ISE,
 	KMA;
 }
