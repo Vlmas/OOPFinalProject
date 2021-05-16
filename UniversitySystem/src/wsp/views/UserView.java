@@ -5,11 +5,11 @@ import java.io.IOException;
 public abstract class UserView {
     private String menu;
 
-    public abstract void start() throws InterruptedException, IOException;
+    public abstract boolean start() throws InterruptedException, IOException;
 
     public abstract void greet();
 
-    public abstract void performAction(String choice) throws IOException;
+    public abstract boolean performAction(String choice) throws IOException;
 
     public String getMenu() {
         return menu;

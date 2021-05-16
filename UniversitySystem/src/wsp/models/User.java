@@ -160,6 +160,10 @@ public abstract class User implements Cloneable, Serializable, Comparable<User> 
 		}
 		throw new IllegalOperationException("Illegal operation! Only admins have permission to perform such operations.");
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 	/**
 	 * <!-- begin-user-doc -->

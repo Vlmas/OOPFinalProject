@@ -12,8 +12,8 @@ public class LibrarianView extends UserView {
     }
 
     @Override
-    public void start() {
-
+    public boolean start() {
+        return true;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class LibrarianView extends UserView {
     }
 
     @Override
-    public void performAction(String choice) {
-
+    public boolean performAction(String choice) {
+        return true;
     }
 }

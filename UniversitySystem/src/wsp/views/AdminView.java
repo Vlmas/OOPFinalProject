@@ -38,7 +38,7 @@ public class AdminView extends UserView {
     }
 
     @Override
-    public void start() throws InterruptedException, IOException {
+    public boolean start() throws InterruptedException, IOException {
         greet();
         Thread.sleep(500);
 
@@ -47,10 +47,11 @@ public class AdminView extends UserView {
         String choice = GlobalReader.reader.readLine();
 
         performAction(choice);
+        return true;
     }
 
     @Override
-    public void performAction(String choice) throws IOException {
+    public boolean performAction(String choice) throws IOException {
         switch(choice.toLowerCase()) {
             case "1" -> addUser();
             case "2" -> removeUser();
@@ -60,6 +61,7 @@ public class AdminView extends UserView {
 
             }
         }
+        return false;
     }
 
     @Override
