@@ -119,7 +119,6 @@ public class Database implements Serializable {
 			add(new Specialty("Information Systems"));
 			add(new Specialty("Automation and Control"));
 		}}));
-		faculties.add(new Faculty(FacultyName.GEF, new ArrayList<>()));
 		faculties.add(new Faculty(FacultyName.SECMC, new ArrayList<>() {{
 			add(new Specialty("Mathematical and Computer Modeling"));
 		}}));
@@ -173,7 +172,9 @@ public class Database implements Serializable {
 	
 	public void addUser(User user) {
 		users.add(user);
-		loginsAndPasswords.get(user.getClass().getSimpleName().toLowerCase()).put(user.getLogin(), user.getPassword());
+		loginsAndPasswords.get(user.getClass().getSimpleName().toLowerCase()).put(
+				user.getLogin(), user.getPassword()
+		);
 	}
 	
 	/**
@@ -286,6 +287,15 @@ public class Database implements Serializable {
 	
 	public HashSet<Faculty> getFaculties() {
 		return faculties;
+	}
+
+	public Faculty getFaculty(FacultyName name) {
+		for(Faculty faculty : faculties) {
+			if(faculty.getName() == name) {
+				return faculty;
+			}
+		}
+		return null;
 	}
 	
 	/**

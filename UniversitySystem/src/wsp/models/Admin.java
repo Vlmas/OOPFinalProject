@@ -1,5 +1,6 @@
 package wsp.models;
 
+import wsp.database.Database;
 import wsp.interfaces.CanAlterUserData;
 import java.util.*;
 
@@ -38,8 +39,7 @@ public class Admin extends Employee implements CanAlterUserData {
 	 */
 	
 	public void addUser(User user) {
-		// TODO implement me
-
+		Database.getInstance().addUser(user);
 	}
 	
 	/**
@@ -85,9 +85,8 @@ public class Admin extends Employee implements CanAlterUserData {
 	 * @ordered
 	 */
 	
-	public HashSet<User> viewUsers(String userAsString) {
-		// TODO implement me
-		return null;	
+	public HashSet<User> getUsers() {
+		return Database.getInstance().getUsers();
 	}
 	
 	/**
@@ -97,8 +96,7 @@ public class Admin extends Employee implements CanAlterUserData {
 	 * @ordered
 	 */
 	
-	public ArrayList<String> viewUserActions() {
-		// TODO implement me
-		return null;	
+	public ArrayList<String> getUserActions() {
+		return Database.getInstance().getUserActions();
 	}
 }

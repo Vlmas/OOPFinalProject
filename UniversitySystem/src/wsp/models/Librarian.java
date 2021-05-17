@@ -27,7 +27,9 @@ public class Librarian extends Employee {
 		super();
 	}
 
-	public Librarian(HashMap<Book, Integer> library) {
+	public Librarian(String name, String surname, String id, String login, String password,
+					 double salary, ArrayList<Message> messages, HashMap<Book, Integer> library) {
+		super(name, surname, id, login, password, salary, messages);
 		this.library = library;
 	}
 

@@ -89,7 +89,12 @@ public class SystemController {
         if(!succeeded) {
             throw new FailedLogInException("User either doesn't exist or you have selected the wrong category, please, try again");
         }
-        runUser(user);
+        if(runUser(user)) {
+            Thread.sleep(800);
+            start();
+        } else {
+            finish();
+        }
     }
 
     public void finish() throws InterruptedException {
@@ -105,7 +110,7 @@ public class SystemController {
         System.exit(0);
     }
 
-    public void runUser(User user) throws InterruptedException, IOException {
+    public boolean runUser(User user) throws InterruptedException, IOException {
         UserView view = null;
 
         if(user instanceof Admin) {
@@ -125,7 +130,7 @@ public class SystemController {
         }
 
         assert(view != null);
-        view.start();
+        return view.start();
     }
 
     public String readLogin() throws IOException {
