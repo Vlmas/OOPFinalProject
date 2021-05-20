@@ -1,7 +1,5 @@
 package wsp.models;
 
-import java.util.*;
-
 /**
  * <!-- begin-user-doc -->
  * <!--  end-user-doc  -->
@@ -22,26 +20,15 @@ public abstract class Employee extends User {
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->
 	 * @generated
-	 * @ordered
-	 */
-	
-	private ArrayList<Message> messages;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
 	 */
 	public Employee() {
 		super();
 	}
 
-	public Employee(String name, String surname, String id, String login, String password,
-					double salary, ArrayList<Message> messages) {
+	public Employee(String name, String surname, String id, String login, String password, double salary) {
 
 		super(name, surname, id, login, password);
 		this.salary = salary;
-		this.messages = messages;
 	}
 
 	/**
@@ -51,7 +38,9 @@ public abstract class Employee extends User {
 	 * @ordered
 	 */
 	
-	public abstract void sendMessage();
+	public void sendMessage(Message message) {
+
+	}
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -62,7 +51,7 @@ public abstract class Employee extends User {
 	
 	public String readMessages() {
 		// TODO implement me
-		return messages.toString();
+		return null;
 	}
 	
 	/**
@@ -99,7 +88,6 @@ public abstract class Employee extends User {
 	public Object clone() throws CloneNotSupportedException {
 		Employee employee = (Employee) super.clone();
 		employee.salary = salary;
-		employee.messages = new ArrayList<>();
 		return employee;
 	}
 

@@ -29,16 +29,10 @@ public class Manager extends Employee implements CanAlterStudentData, CanAlterCo
 		super();
 	}
 
-	public Manager(String name, String surname, String id, String login, String password,
-				 double salary, ArrayList<Message> messages, ManagerType type) {
-
-		super(name, surname, id, login, password, salary, messages);
+	public Manager(String name, String surname, String id, String login,
+				   String password, double salary, ManagerType type) {
+		super(name, surname, id, login, password, salary);
 		this.type = type;
-	}
-
-	@Override
-	public void sendMessage() {
-
 	}
 
 	/**

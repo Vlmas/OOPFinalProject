@@ -275,6 +275,10 @@ public class Student extends User implements CanRateTeacher {
 		// TODO implement me
 
 	}
+
+	public void setSpecialty(Specialty specialty) {
+		this.specialty = specialty;
+	}
 	
 	/**
 	 * <!-- begin-user-doc -->

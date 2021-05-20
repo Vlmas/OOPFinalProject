@@ -60,19 +60,13 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	}
 
 	public Teacher(String name, String surname, String id, String login, String password, double salary,
-				   ArrayList<Message> messages, TeacherTitle title,
-				   int experience, ArrayList<Course> courses, double rating) {
+				   TeacherTitle title, int experience, ArrayList<Course> courses, double rating) {
 
-		super(name, surname, id, login, password, salary, messages);
+		super(name, surname, id, login, password, salary);
 		this.title = title;
 		this.experience = experience;
 		this.courses = courses;
 		this.rating = rating;
-	}
-
-	@Override
-	public void sendMessage() {
-
 	}
 
 	/**
@@ -133,6 +127,10 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	public void setCourse(Course course) {
 		// TODO implement me
 
+	}
+
+	public void setTitle(TeacherTitle title) {
+		this.title = title;
 	}
 
 	public void setRating(User user, double rating) throws IllegalOperationException {

@@ -2,101 +2,69 @@ package wsp.database;
 
 import wsp.enums.FacultyName;
 import wsp.models.*;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 /**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
+ * Main Database for the WSP University System. Contains all the data of users, courses, faculties,
+ * specialties, messages of employees, performance reports, log actions and news. Provides the ability
+ * to retrieve, add and update data.
  */
-
 public class Database implements Serializable {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * This class implements Singleton Design Pattern. Thus it posses private constructor with no ability
+	 * to create new instances of this class. Global access is provided. All functionality is provided
+	 * via instance field. Usage: {@code Database.getInstance()}, then get the needed function.
 	 */
-	
 	private static Database instance;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * This field contains all logins and passwords of users. They are grouped by the type of the user.
+	 * Like {@code loginsAndPasswords.get("student")} will return all logins and passwords of students.
 	 */
-	
 	private HashMap<String, HashMap<String, String>> loginsAndPasswords;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * This field contains all users that are registered to the system.
 	 */
-	
 	private HashSet<User> users;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * This field contains all courses. All of them are combined in one {@code HashSet<>} independent
+	 * from faculty.
 	 */
-	
 	private HashSet<Course> courses;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * All faculties of the System lay there.
 	 */
-	
 	private HashSet<Faculty> faculties;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * User logging actions are contained in this field as list of strings.
 	 */
-	
 	private ArrayList<String> userActions;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Messaging between employees, often between manager and teacher are contained there.
+	 * Can be accessed for further manipulations.
 	 */
-	
 	private ArrayList<Message> messages;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Contains statistical reports about students performance. Is made by manager.
 	 */
-	
 	private ArrayList<String> reports;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Contains all news in the system. They can be viewed by students and teachers. Manager
+	 * manages these news by adding, deleting or updating them.
 	 */
-
 	private ArrayList<News> allNews;
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
+	 * Private constructor of the Singleton class. Can't be more than 1 object. Initializes base fields
+	 * for casual functioning of the system.
 	 */
 	private Database() {
 		loginsAndPasswords = new HashMap<>();
@@ -135,16 +103,15 @@ public class Database implements Serializable {
 			add(new Specialty("Marine Engineering"));
 		}})));
 
-		addUser(new Admin("Admin", "Admin", "10BD2367", "admin@kbtu.kz", "admin", 500000, new ArrayList<>()));
+		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 600000));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Retrieves the singleton instance of this Database class. Via this method all functionality
+	 * of the system is performed.
+	 *
+	 * @return static instance of the Database
 	 */
-	
 	public static Database getInstance() {
 		if(instance == null) {
 			instance = new Database();
@@ -153,26 +120,69 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users registered in the system.
+	 *
+	 * @return all registered users
 	 */
-	
 	public HashSet<User> getUsers() {
 		return users;
 	}
+
+	/**
+	 * Gets all employees registered in the system.
+	 *
+	 * @return all registered employees
+	 */
+	public HashSet<Employee> getEmployees() {
+		HashSet<Employee> employees = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Employee) {
+				employees.add((Employee) user);
+			}
+		}
+		return employees;
+	}
+
+	/**
+	 * Gets all users registered in the system except the given one.
+	 *
+	 * @param exception user to exclude from general set
+	 * @return users set with one excluded user
+	 */
+	public HashSet<User> getUsersExcept(User exception) {
+		HashSet<User> usersExcept = new HashSet<>();
+
+		for(User user : users) {
+			if(user != exception) {
+				usersExcept.add(user);
+			}
+		}
+		return usersExcept;
+	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Adds the given user to Database. Firstly added to users set, then to corresponding section
+	 * of {@code loginsAndPasswords}.
+	 *
+	 * @param user user to add to Database
 	 */
-	
 	public void addUser(User user) {
 		users.add(user);
 		loginsAndPasswords.get(user.getClass().getSimpleName().toLowerCase()).put(
+				user.getLogin(), user.getPassword()
+		);
+	}
+
+	/**
+	 * Removes the given user from Database. Firstly removed from users set, then from corresponding section
+	 * of {@code loginsAndPasswords}.
+	 *
+	 * @param user user to remove from Database
+	 */
+	public void removeUser(User user) {
+		users.remove(user);
+		loginsAndPasswords.get(user.getClass().getSimpleName().toLowerCase()).remove(
 				user.getLogin(), user.getPassword()
 		);
 	}
@@ -183,7 +193,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Student> getStudents() {
 		HashSet<Student> students = new HashSet<>();
 
@@ -201,7 +210,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Teacher> getTeachers() {
 		HashSet<Teacher> teachers = new HashSet<>();
 
@@ -219,7 +227,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Manager> getManagers() {
 		HashSet<Manager> managers = new HashSet<>();
 
@@ -237,7 +244,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Admin> getAdmins() {
 		HashSet<Admin> admins = new HashSet<>();
 
@@ -255,7 +261,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Librarian> getLibrarians() {
 		HashSet<Librarian> librarians = new HashSet<>();
 
@@ -273,7 +278,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Course> getCourses() {
 		return courses;
 	}
@@ -284,7 +288,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashSet<Faculty> getFaculties() {
 		return faculties;
 	}
@@ -304,7 +307,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public ArrayList<String> getUserActions() {
 		return userActions;
 	}
@@ -315,9 +317,18 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public ArrayList<Message> getMessages() {
 		return messages;
+	}
+	public ArrayList<Message> getMessagesOf(Employee employee) {
+		ArrayList<Message> messagesOf = new ArrayList<>();
+
+		for(Message message : messages) {
+			if(message.toWho() == employee) {
+				messagesOf.add(message);
+			}
+		}
+		return messagesOf;
 	}
 	
 	/**
@@ -326,7 +337,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public ArrayList<String> getReports() {
 		return reports;
 	}
@@ -337,7 +347,6 @@ public class Database implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public User getUserByLoginAndPassword(String login, String password) {
 		User type = null;
 
@@ -418,5 +427,45 @@ public class Database implements Serializable {
 	
 	public void addCourse(Course course) {
 		courses.add(course);
+	}
+
+	/**
+	 * Saves (serializes) the current Database state to separate file named {@code db.out}.
+	 *
+	 * @throws IOException when some inner processes are interrupted or corrupted
+	 */
+	public static void save() throws IOException {
+		try {
+			FileOutputStream file = new FileOutputStream("db.out");
+			ObjectOutputStream obj = new ObjectOutputStream(file);
+
+			obj.writeObject(instance);
+			obj.close();
+			file.close();
+		} catch(IOException exc) {
+			throw new IOException("Couldn't save the current progress");
+		}
+	}
+
+	/**
+	 * Loads (deserializes) previously saved state of the Database. Is assigned to {@code instance}
+	 * itself, not creating auxiliary instances of Database.
+	 *
+	 * @throws IOException when some inner processes are interrupted or corrupted
+	 */
+	public static void load() throws IOException {
+		try {
+			FileInputStream file = new FileInputStream("db.out");
+			ObjectInputStream obj = new ObjectInputStream(file);
+
+			instance = (Database) obj.readObject();
+			obj.close();
+			file.close();
+		} catch(IOException exc) {
+			System.out.println(exc.getMessage());
+			instance = new Database();
+		} catch(ClassNotFoundException exc) {
+			throw new IOException(("Failed to load the progress, class not found"));
+		}
 	}
 }

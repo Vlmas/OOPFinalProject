@@ -152,17 +152,17 @@ public abstract class User implements Cloneable, Serializable, Comparable<User> 
 	 * @generated
 	 * @ordered
 	 */
-	
-	public void setPassword(User user, String password) throws IllegalOperationException {
-		// TODO implement me
-		if(user == this || user instanceof CanAlterUserData) {
-			this.password = password;
-		}
-		throw new IllegalOperationException("Illegal operation! Only admins have permission to perform such operations.");
-	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	/**
@@ -219,5 +219,11 @@ public abstract class User implements Cloneable, Serializable, Comparable<User> 
 	@Override
 	public int compareTo(User o) {
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return (id + "| " + name.charAt(0) + ". " + surname + " (" + getClass().getSimpleName()
+				+ "). Login: " + login + ", Password: " + password);
 	}
 }

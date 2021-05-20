@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class SystemController {
-    public SystemController() throws InterruptedException {
+    public SystemController() throws InterruptedException, IOException {
         displayGreetingMessage();
+        loadProgress();
     }
 
     public void start() throws IOException, FailedLogInException, InterruptedException {
@@ -80,9 +81,13 @@ public class SystemController {
         String password = readPassword();
 
         for(Map.Entry<String, String> loginPassword : Database.getInstance().getUserLoginsAndPasswords(userType).entrySet()) {
-            if(loginPassword.getKey().equals(login) && loginPassword.getValue().equals(password)) {
-                user = Database.getInstance().getUserByLoginAndPassword(login, password);
-                succeeded = true;
+            if(loginPassword.getKey().equals(login)) {
+                if(loginPassword.getValue().equals(password)) {
+                    user = Database.getInstance().getUserByLoginAndPassword(login, password);
+                    succeeded = true;
+                } else {
+                    throw new FailedLogInException("Wrong login or password, please, try again");
+                }
             }
         }
 
@@ -97,15 +102,16 @@ public class SystemController {
         }
     }
 
-    public void finish() throws InterruptedException {
+    public void finish() throws InterruptedException, IOException {
         System.out.print("Logging out");
-        Thread.sleep(600);
+        Thread.sleep(500);
+        System.out.print(".");
+        Thread.sleep(700);
+        System.out.print(".");
+        Thread.sleep(900);
         System.out.print(".");
         Thread.sleep(800);
-        System.out.print(".");
-        Thread.sleep(1000);
-        System.out.print(".");
-        Thread.sleep(800);
+        saveProgress();
         System.out.println(" Goodbye!");
         System.exit(0);
     }
@@ -145,7 +151,11 @@ public class SystemController {
         return !Database.getInstance().getUserLoginsAndPasswords(userType).isEmpty();
     }
 
-    public void save() {}
+    public void saveProgress() throws IOException {
+        Database.save();
+    }
 
-    public void load() {}
+    public void loadProgress() throws IOException {
+        Database.load();
+    }
 }

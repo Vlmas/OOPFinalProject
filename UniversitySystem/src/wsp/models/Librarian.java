@@ -28,14 +28,9 @@ public class Librarian extends Employee {
 	}
 
 	public Librarian(String name, String surname, String id, String login, String password,
-					 double salary, ArrayList<Message> messages, HashMap<Book, Integer> library) {
-		super(name, surname, id, login, password, salary, messages);
+					 double salary, HashMap<Book, Integer> library) {
+		super(name, surname, id, login, password, salary);
 		this.library = library;
-	}
-
-	@Override
-	public void sendMessage() {
-
 	}
 
 	/**

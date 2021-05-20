@@ -4,8 +4,7 @@ import wsp.database.Database;
 import wsp.enums.*;
 import wsp.models.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class UserFactory {
     private String name;
@@ -46,20 +45,20 @@ public class UserFactory {
     }
 
     public Admin createAdmin() throws IOException {
-        getEmployeeInformation();
-        return new Admin(name, surname, id, login, password, salary, new ArrayList<>());
+        getEmployeeData();
+        return new Admin(name, surname, id, login, password, salary);
     }
 
     public Manager createManager() throws IOException {
-        getEmployeeInformation();
+        getEmployeeData();
         System.out.println("Select type of the manager (any other key will select OR manager): ");
         System.out.println("|1| OR\n|2| Departments");
         managerType = (GlobalReader.reader.readLine().equals("2")) ? ManagerType.DEPARTMENTS : ManagerType.OR;
-        return new Manager(name, surname, id, login, password, salary, new ArrayList<>(), managerType);
+        return new Manager(name, surname, id, login, password, salary, managerType);
     }
 
     public Teacher createTeacher() throws IOException {
-        getEmployeeInformation();
+        getEmployeeData();
         System.out.println("Select teacher title (any other key will select Professor): ");
         System.out.println("|1| Tutor\n|2| Lector\n|3| Senior Lector\n|4| Professor\n|5| Associative Professor");
 
@@ -74,16 +73,16 @@ public class UserFactory {
         System.out.print("Enter teacher experience (integer year): ");
         experience = Integer.parseInt(GlobalReader.reader.readLine());
         return new Teacher(name, surname, id, login, password, salary,
-                new ArrayList<>(), teacherTitle, experience, new ArrayList<>(), 0);
+                teacherTitle, experience, new ArrayList<>(), 0);
     }
 
     public Librarian createLibrarian() throws IOException {
-        getEmployeeInformation();
-        return new Librarian(name, surname, id, login, password, salary, new ArrayList<>(), new HashMap<>());
+        getEmployeeData();
+        return new Librarian(name, surname, id, login, password, salary, new HashMap<>());
     }
 
     public Student createStudent() throws IOException {
-        getUserInformation();
+        getUserData();
 
         boolean valid;
 
@@ -179,15 +178,13 @@ public class UserFactory {
                 System.out.println("|" + (i + 1) + "| " + ((Specialty) specialties[i]).getName());
             }
 
-            int choice = -1;
-            try {
-                choice = Integer.parseInt(GlobalReader.reader.readLine()) - 1;
-            } catch(NumberFormatException exc) {
+            int choice = Util.parseChoice(GlobalReader.reader.readLine());
+            if(choice < 0) {
                 System.out.println("Not proper value, enter a proper value");
-                valid = false;
+                continue;
             }
 
-            if(choice >= 0 && choice < specialties.length) {
+            if(Util.isInRange(choice, 0, specialties.length - 1)) {
                 specialty = (Specialty) specialties[choice];
                 valid = true;
             } else {
@@ -201,7 +198,7 @@ public class UserFactory {
                 degree, faculty, specialty, new ArrayList<>(), new Transcript(), 0, new ArrayList<>());
     }
 
-    public void getUserInformation() throws IOException {
+    public void getUserData() throws IOException {
         System.out.print("Enter user name: ");
         name = GlobalReader.reader.readLine();
         System.out.print("Enter user surname: ");
@@ -214,8 +211,8 @@ public class UserFactory {
         password = (password.trim().equals("")) ? generatePassword() : password;
     }
 
-    public void getEmployeeInformation() throws IOException {
-        getUserInformation();
+    public void getEmployeeData() throws IOException {
+        getUserData();
         System.out.print("Enter employee's salary: ");
         salary = Double.parseDouble(GlobalReader.reader.readLine());
     }

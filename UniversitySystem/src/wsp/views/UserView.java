@@ -9,7 +9,7 @@ public abstract class UserView {
 
     public abstract void greet();
 
-    public abstract boolean performAction(String choice) throws IOException;
+    public abstract boolean performAction(String choice) throws IOException, InterruptedException;
 
     public String getMenu() {
         return menu;
