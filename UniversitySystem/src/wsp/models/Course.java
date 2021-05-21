@@ -1,5 +1,6 @@
 package wsp.models;
 
+import wsp.enums.FacultyName;
 import java.io.Serializable;
 import java.util.*;
 
@@ -34,8 +35,17 @@ public class Course implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	private Faculty faculty;
+
+	private String code;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
+
+	private FacultyName faculty;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -91,17 +101,17 @@ public class Course implements Serializable {
 		super();
 	}
 
-	public Course(String name, String description, Faculty faculty, int creditsAmount,
-				  ArrayList<Course> prerequisites, ArrayList<Student> students,
-				  ArrayList<CourseFile> courseFiles, ArrayList<Lesson> lessons) {
+	public Course(String name, String description, String code, FacultyName faculty, int creditsAmount,
+				  ArrayList<Course> prerequisites, ArrayList<Lesson> lessons) {
 
 		this.name = name;
 		this.description = description;
+		this.code = code;
 		this.faculty = faculty;
 		this.creditsAmount = creditsAmount;
 		this.prerequisites = prerequisites;
-		this.students = students;
-		this.courseFiles = courseFiles;
+		this.students = new ArrayList<>();
+		this.courseFiles = new ArrayList<>();
 		this.lessons = lessons;
 	}
 
@@ -113,7 +123,6 @@ public class Course implements Serializable {
 	 */
 	
 	public String getName() {
-		// TODO implement me
 		return name;
 	}
 	
@@ -125,8 +134,11 @@ public class Course implements Serializable {
 	 */
 	
 	public String getDescription() {
-		// TODO implement me
 		return description;
+	}
+
+	public String getCode() {
+		return code;
 	}
 	
 	/**
@@ -136,8 +148,7 @@ public class Course implements Serializable {
 	 * @ordered
 	 */
 	
-	public Faculty getFaculty() {
-		// TODO implement me
+	public FacultyName getFaculty() {
 		return faculty;
 	}
 	
@@ -149,7 +160,6 @@ public class Course implements Serializable {
 	 */
 	
 	public int getCreditsAmount() {
-		// TODO implement me
 		return creditsAmount;
 	}
 	
@@ -161,7 +171,6 @@ public class Course implements Serializable {
 	 */
 	
 	public ArrayList<Course> getPrerequisites() {
-		// TODO implement me
 		return prerequisites;
 	}
 	
@@ -173,7 +182,6 @@ public class Course implements Serializable {
 	 */
 	
 	public ArrayList<Student> getStudents() {
-		// TODO implement me
 		return students;
 	}
 	
@@ -185,7 +193,6 @@ public class Course implements Serializable {
 	 */
 	
 	public ArrayList<CourseFile> getCourseFiles() {
-		// TODO implement me
 		return courseFiles;
 	}
 	
@@ -197,7 +204,6 @@ public class Course implements Serializable {
 	 */
 	
 	public ArrayList<Lesson> getLessons() {
-		// TODO implement me
 		return lessons;
 	}
 	
@@ -209,7 +215,6 @@ public class Course implements Serializable {
 	 */
 	
 	public void setDescription(String description) {
-		// TODO implement me
 		this.description = description;
 	}
 	
@@ -256,7 +261,7 @@ public class Course implements Serializable {
 	 * @ordered
 	 */
 	
-	public void removeCourseFile(CourseFile parameter) {
+	public void removeCourseFile(CourseFile file) {
 		// TODO implement me
 
 	}
@@ -271,5 +276,10 @@ public class Course implements Serializable {
 	public void setLessons(ArrayList<Lesson> lessons) {
 		// TODO implement me
 
+	}
+
+	@Override
+	public String toString() {
+		return name + " (" + faculty + ")";
 	}
 }

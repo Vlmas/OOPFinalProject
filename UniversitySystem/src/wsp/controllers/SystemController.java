@@ -26,7 +26,7 @@ public class SystemController {
     }
 
     public void displayGreetingMessage() throws InterruptedException {
-        System.out.println("Welcome to KBTU University System!\n");
+        System.out.println("Welcome to KBTU University System!");
         Thread.sleep(1000);
     }
 
@@ -104,11 +104,11 @@ public class SystemController {
 
     public void finish() throws InterruptedException, IOException {
         System.out.print("Logging out");
-        Thread.sleep(500);
+        Thread.sleep(400);
         System.out.print(".");
-        Thread.sleep(700);
+        Thread.sleep(600);
         System.out.print(".");
-        Thread.sleep(900);
+        Thread.sleep(800);
         System.out.print(".");
         Thread.sleep(800);
         saveProgress();

@@ -201,4 +201,9 @@ public class Teacher extends Employee implements CanAlterCourseData {
 		// TODO implement me
 		return null;	
 	}
+
+	@Override
+	public String toString() {
+		return "";
+	}
 }

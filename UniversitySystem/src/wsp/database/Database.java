@@ -1,8 +1,10 @@
 package wsp.database;
 
 import wsp.enums.FacultyName;
+import wsp.enums.LessonType;
 import wsp.models.*;
 import java.io.*;
+import java.time.DayOfWeek;
 import java.util.*;
 
 /**
@@ -76,12 +78,21 @@ public class Database implements Serializable {
 		reports = new ArrayList<>();
 		allNews = new ArrayList<>();
 
+		initializeLoginPasswords();
+		initializeFaculties();
+		initializeUsers();
+		initializeCourses();
+	}
+
+	private void initializeLoginPasswords() {
 		loginsAndPasswords.putIfAbsent("admin", new HashMap<>());
 		loginsAndPasswords.putIfAbsent("manager", new HashMap<>());
 		loginsAndPasswords.putIfAbsent("teacher", new HashMap<>());
 		loginsAndPasswords.putIfAbsent("librarian", new HashMap<>());
 		loginsAndPasswords.putIfAbsent("student", new HashMap<>());
+	}
 
+	private void initializeFaculties() {
 		faculties.add(new Faculty(FacultyName.FIT, new ArrayList<>() {{
 			add(new Specialty("Computer Systems and Software"));
 			add(new Specialty("Information Systems"));
@@ -102,8 +113,56 @@ public class Database implements Serializable {
 		faculties.add((new Faculty(FacultyName.KMA, new ArrayList<>() {{
 			add(new Specialty("Marine Engineering"));
 		}})));
+	}
 
-		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 600000));
+	private void initializeUsers() {
+		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 500000));
+	}
+
+	private void initializeCourses() {
+		addCourse(
+			new Course("Object-Oriented Programming",
+				"Object Technology has been in development for over forty years. It is now embedded in such diverse areas requirements engineering...",
+				"CSCI2106",
+				FacultyName.FIT,
+				3,
+				new ArrayList<>(),
+				new ArrayList<>() {{
+					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 14, 0, 15, 0));
+					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 15, 0, 16, 0));
+					add(new Lesson(LessonType.PRACTICE, DayOfWeek.TUESDAY, 16, 0, 17, 0));
+					add(new Lesson(LessonType.PRACTICE, DayOfWeek.TUESDAY, 17, 0, 18, 0));
+				}}
+			)
+		);
+		addCourse(
+			new Course("Physics II",
+				"Physics 2 is the second part of the physics course including basic topics of General Physics...",
+				"PHYS2102",
+				FacultyName.GEF,
+				3,
+				new ArrayList<>(),
+				new ArrayList<>() {{
+					add(new Lesson(LessonType.LECTURE, DayOfWeek.MONDAY, 14, 0, 15, 0));
+					add(new Lesson(LessonType.PRACTICE, DayOfWeek.THURSDAY, 12, 0, 13, 0));
+					add(new Lesson(LessonType.LAB, DayOfWeek.THURSDAY, 16, 0, 18, 0));
+				}}
+			)
+		);
+		addCourse(
+			new Course("Discrete Mathematics",
+				"Discrete mathematics is the study of mathematical structures that are countable or otherwise distinct and separable...",
+				"CSCI1102",
+				FacultyName.SECMC,
+				3,
+				new ArrayList<>(),
+				new ArrayList<>() {{
+					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 14, 0, 15, 0));
+					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 15, 0, 16, 0));
+					add(new Lesson(LessonType.PRACTICE, DayOfWeek.TUESDAY, 16, 0, 17, 0));
+				}}
+			)
+		);
 	}
 
 	/**
@@ -220,6 +279,19 @@ public class Database implements Serializable {
 		}
 		return teachers;
 	}
+
+	public HashSet<Teacher> getCourseTeachers(Course course) {
+		HashSet<Teacher> teachers = new HashSet<>();
+
+		for(User user : users) {
+			if(user instanceof Teacher) {
+				if(((Teacher) user).getCourses().contains(course)) {
+					teachers.add((Teacher) user);
+				}
+			}
+		}
+		return teachers;
+	}
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -280,6 +352,17 @@ public class Database implements Serializable {
 	 */
 	public HashSet<Course> getCourses() {
 		return courses;
+	}
+
+	public HashSet<Course> getCoursesOf(FacultyName facultyName) {
+		HashSet<Course> resultantCourses = new HashSet<>();
+
+		for(Course course : courses) {
+			if(course.getFaculty() == facultyName) {
+				resultantCourses.add(course);
+			}
+		}
+		return resultantCourses;
 	}
 	
 	/**

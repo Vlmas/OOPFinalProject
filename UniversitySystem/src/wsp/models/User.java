@@ -1,7 +1,5 @@
 package wsp.models;
 
-import wsp.exceptions.IllegalOperationException;
-import wsp.interfaces.CanAlterUserData;
 import java.io.Serializable;
 import java.util.Objects;
 

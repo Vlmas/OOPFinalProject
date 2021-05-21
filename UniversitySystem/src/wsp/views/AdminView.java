@@ -11,11 +11,49 @@ import java.util.*;
 public class AdminView extends UserView {
     private Admin admin;
 
-    public AdminView() {}
+    public AdminView() {
+        setMenu(
+                "---------------------------------\n" +
+                "|1| View users\n" +
+                "|2| Add user\n" +
+                "|3| Delete user\n" +
+                "|4| Update user\n" +
+                "|5| View logs about user actions\n" +
+                "|X| Cancel\n" +
+                "---------------------------------"
+        );
+    }
 
     public AdminView(Admin admin) {
+        this();
         this.admin = admin;
         greet();
+    }
+
+    @Override
+    public boolean performAction(String choice) throws IOException, InterruptedException {
+        switch(choice.toLowerCase()) {
+            case "1" -> viewUsers();
+            case "2" -> addUser();
+            case "3" -> removeUser();
+            case "4" -> updateUser();
+            case "5" -> viewUserActions();
+            case "6", "x", "q", "exit", "quit" -> {
+                System.out.println("Logging out.. Goodbye, " + admin.getName() + "!");
+                return false;
+            }
+            default -> {
+                System.out.println("Wrong operation was selected, please, choose the correct one");
+                return true;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void greet() {
+        System.out.println("Welcome, " + admin.getName() + "!");
+        Database.getInstance().addUserAction("User " + admin.getName() + " (Admin) logged in at " + new Date().toString());
     }
 
     public void addUser() throws IOException, InterruptedException {
@@ -71,21 +109,16 @@ public class AdminView extends UserView {
     }
 
     public void updateUser() throws IOException, InterruptedException {
-        Object[] usersObj = Database.getInstance().getUsers().toArray();
-        User[] users = new User[usersObj.length];
-
-        for(int i = 0; i < users.length; i++) {
-            users[i] = (User) usersObj[i];
-        }
-        Arrays.sort(users, new NameComparator());
+        ArrayList<User> users = new ArrayList<>(Database.getInstance().getUsers());
+        users.sort(new NameComparator());
 
         System.out.println("Select the user to update, or X to cancel:");
 
-        for(int i = 0; i < users.length; i++) {
-            if(users[i] != admin) {
-                System.out.println((i + 1) + ") " + users[i]);
+        for(int i = 0; i < users.size(); i++) {
+            if(users.get(i) != admin) {
+                System.out.println((i + 1) + ") " + users.get(i));
             } else {
-                System.out.println("\033[0;31m" + (i + 1) + ") This " + users[i] + "\033[0m");
+                System.out.println(Util.COLOR_BLUE + (i + 1) + ") This " + users.get(i) + Util.COLOR_RESET);
             }
         }
         System.out.println("X) Cancel");
@@ -102,10 +135,10 @@ public class AdminView extends UserView {
             return;
         }
 
-        if(Util.isInRange(choice, 0, users.length - 1)) {
-            UserRenovator renovator = new UserRenovator(users[choice]);
+        if(Util.isInRange(choice, 0, users.size() - 1)) {
+            UserRenovator renovator = new UserRenovator(users.get(choice));
             renovator.updateUser();
-            System.out.println(users[choice]);
+            System.out.println(users.get(choice));
         } else {
             System.out.println("Invalid input, not in range of users");
         }
@@ -170,47 +203,5 @@ public class AdminView extends UserView {
                 return "unknown";
             }
         }
-    }
-
-    @Override
-    public boolean start() throws InterruptedException, IOException {
-        Thread.sleep(500);
-
-        System.out.println("\nSelect which type of action you want to perform, or X to cancel:");
-        System.out.println("---------------------------------\n|1| View users\n|2| Add user\n|3| Delete user\n" +
-                "|4| Update user\n|5| View logs about user actions\n|X| Cancel\n---------------------------------");
-        String choice = GlobalReader.reader.readLine();
-
-        if(performAction(choice)) {
-            return start();
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public boolean performAction(String choice) throws IOException, InterruptedException {
-        switch(choice.toLowerCase()) {
-            case "1" -> viewUsers();
-            case "2" -> addUser();
-            case "3" -> removeUser();
-            case "4" -> updateUser();
-            case "5" -> viewUserActions();
-            case "6", "x", "q", "exit", "quit" -> {
-                System.out.println("Logging out.. Goodbye, " + admin.getName() + "!");
-                return false;
-            }
-            default -> {
-                System.out.println("Wrong operation was selected, please, choose the correct one");
-                return true;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void greet() {
-        System.out.println("Welcome, " + admin.getName() + "!\n");
-        Database.getInstance().addUserAction("User " + admin.getName() + " (Admin) logged in at " + new Date().toString());
     }
 }

@@ -2,9 +2,10 @@ package wsp.models;
 
 import wsp.enums.LessonType;
 import wsp.exceptions.IllegalOperationException;
-import wsp.interfaces.CanAlterCourseData;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,20 +30,40 @@ public class Lesson implements Serializable {
 	 * @ordered
 	 */
 	
-	private Date time;
+	private DayOfWeek day;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
+	private LocalTime startTime;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
+	private LocalTime endTime;
 	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->
 	 * @generated
 	 */
-	public Lesson() {
-		super();
-	}
+	public Lesson() {}
 
-	public Lesson(LessonType type, Date time) {
+	public Lesson(LessonType type, DayOfWeek day, int startHour, int startMinute, int endHour, int endMinute) {
+//		if(endHour - startHour > 2) {
+//			System.out.println("One lesson duration can't be more than 2 hours!");
+//			return;
+//		}
 		this.type = type;
-		this.time = time;
+		this.day = day;
+		this.startTime = LocalTime.of(startHour, startMinute);
+		this.endTime = LocalTime.of(endHour, endMinute);
 	}
 
 	/**
@@ -63,8 +84,16 @@ public class Lesson implements Serializable {
 	 * @ordered
 	 */
 	
-	public Date getTime() {
-		return time;
+	public LocalTime getStartTime() {
+		return startTime;
+	}
+
+	public LocalTime getEndTime() {
+		return endTime;
+	}
+
+	public DayOfWeek getDay() {
+		return day;
 	}
 	
 	/**
@@ -73,12 +102,17 @@ public class Lesson implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	public void setTime(User user, Date time) throws IllegalOperationException {
-		if(user instanceof CanAlterCourseData) {
-			this.time = time;
-		} else {
-			throw new IllegalOperationException("Only teacher or manager can change lessons!");
-		}
+	public void setDayTime(DayOfWeek day, int startHour, int startMinute, int endHour, int endMinute) {
+		this.day = day;
+		this.startTime = LocalTime.of(startHour, startMinute);
+		this.endTime = LocalTime.of(endHour, endMinute);
+	}
+
+	@Override
+	public String toString() {
+		return (
+			"|" + type + "| Starts at " + startTime.getHour() + ":" + ((startTime.getMinute() == 0) ? "00" : startTime.getMinute()) + ", ends at "
+			+ endTime.getHour() + ":" + ((endTime.getMinute() == 0) ? "00" : endTime.getMinute()) + ". " + day
+		);
 	}
 }

@@ -50,7 +50,6 @@ public class CourseFile implements Serializable {
 	 */
 	
 	public String getName() {
-		// TODO implement me
 		return name;
 	}
 	
@@ -62,7 +61,6 @@ public class CourseFile implements Serializable {
 	 */
 	
 	public Date getCreationDate() {
-		// TODO implement me
 		return creationDate;
 	}
 	
@@ -76,5 +74,10 @@ public class CourseFile implements Serializable {
 	public void setName(String name) {
 		// TODO implement me
 
+	}
+
+	@Override
+	public String toString() {
+		return name + ". Created at" + creationDate;
 	}
 }

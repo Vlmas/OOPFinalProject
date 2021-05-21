@@ -7,5 +7,6 @@ package wsp.enums;
  */
 public enum LessonType {
 	LECTURE,
-	PRACTICE;
+	PRACTICE,
+	LAB
 }
