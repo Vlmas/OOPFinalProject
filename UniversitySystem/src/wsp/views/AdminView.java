@@ -19,7 +19,7 @@ public class AdminView extends UserView {
                 "|3| Delete user\n" +
                 "|4| Update user\n" +
                 "|5| View logs about user actions\n" +
-                "|X| Cancel\n" +
+                "|X| Logout\n" +
                 "---------------------------------"
         );
     }

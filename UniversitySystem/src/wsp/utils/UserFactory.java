@@ -195,7 +195,7 @@ public class UserFactory {
         } while(!valid);
 
         return new Student(name, surname, id, login, password, yearOfStudy,
-                degree, faculty, specialty, new ArrayList<>(), new Transcript(), 0, new ArrayList<>());
+                degree, faculty, specialty, new ArrayList<>(), new Transcript(), 0);
     }
 
     public void getUserData() throws IOException {

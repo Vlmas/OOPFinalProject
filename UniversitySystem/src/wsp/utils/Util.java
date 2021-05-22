@@ -1,5 +1,9 @@
 package wsp.utils;
 
+import wsp.database.Database;
+import wsp.models.News;
+import java.util.ArrayList;
+
 public class Util {
     public static final String COLOR_RESET = "\033[0m";
     public static final String COLOR_BLACK = "\033[0;30m";
@@ -20,5 +24,22 @@ public class Util {
 
     public static boolean isInRange(int number, int left, int right) {
         return (number >= left && number <= right);
+    }
+
+    public static void viewNews() {
+        ArrayList<News> allNews = Database.getInstance().getNews();
+
+        if(!allNews.isEmpty()) {
+            int index = 1;
+
+            for(News news : allNews) {
+                System.out.println(COLOR_GREEN + "|" + index + "| " + news.getTitle() + ". " + news.getPostDate() + COLOR_RESET);
+                System.out.println("Content: " + news.getContent());
+                System.out.println("Comments: " + news.getComments() + "\n");
+                index++;
+            }
+        } else {
+            System.out.println("No news for now");
+        }
     }
 }

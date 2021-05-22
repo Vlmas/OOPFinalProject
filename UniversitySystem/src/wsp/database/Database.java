@@ -2,6 +2,7 @@ package wsp.database;
 
 import wsp.enums.FacultyName;
 import wsp.enums.LessonType;
+import wsp.enums.TeacherTitle;
 import wsp.models.*;
 import java.io.*;
 import java.time.DayOfWeek;
@@ -63,6 +64,12 @@ public class Database implements Serializable {
 	 * manages these news by adding, deleting or updating them.
 	 */
 	private ArrayList<News> allNews;
+
+	/**
+	 * Contains all requests from students for course registration. Is viewed by manager, who later
+	 * decides to accept or reject this request, despite its correctness.
+	 */
+	private HashMap<Student, ArrayList<Course>> courseRegistrationRequests;
 	
 	/**
 	 * Private constructor of the Singleton class. Can't be more than 1 object. Initializes base fields
@@ -77,11 +84,13 @@ public class Database implements Serializable {
 		messages = new ArrayList<>();
 		reports = new ArrayList<>();
 		allNews = new ArrayList<>();
+		courseRegistrationRequests = new HashMap<>();
 
 		initializeLoginPasswords();
 		initializeFaculties();
-		initializeUsers();
 		initializeCourses();
+		initializeUsers();
+		addNews(new News("WSP started its work!", "Great times are ahead, enjoy!!", new ArrayList<>() {{ add("That's very cool"); add("Nice, I'm happy"); }}, new Date()));
 	}
 
 	private void initializeLoginPasswords() {
@@ -117,6 +126,7 @@ public class Database implements Serializable {
 
 	private void initializeUsers() {
 		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 500000));
+		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi@kbtu.kz", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>() {{ add((Course) courses.toArray()[0]); }}, 0));
 	}
 
 	private void initializeCourses() {
@@ -247,10 +257,9 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users that are students.
+	 *
+	 * @return set of students
 	 */
 	public HashSet<Student> getStudents() {
 		HashSet<Student> students = new HashSet<>();
@@ -262,12 +271,11 @@ public class Database implements Serializable {
 		}
 		return students;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users that are teachers.
+	 *
+	 * @return set of teachers
 	 */
 	public HashSet<Teacher> getTeachers() {
 		HashSet<Teacher> teachers = new HashSet<>();
@@ -280,6 +288,12 @@ public class Database implements Serializable {
 		return teachers;
 	}
 
+	/**
+	 * Gets teachers of specific course.
+	 *
+	 * @param course course which teachers to retrieve
+	 * @return set of teachers
+	 */
 	public HashSet<Teacher> getCourseTeachers(Course course) {
 		HashSet<Teacher> teachers = new HashSet<>();
 
@@ -294,10 +308,9 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users that are managers.
+	 *
+	 * @return set of managers
 	 */
 	public HashSet<Manager> getManagers() {
 		HashSet<Manager> managers = new HashSet<>();
@@ -311,10 +324,9 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users that are admins.
+	 *
+	 * @return set of admins
 	 */
 	public HashSet<Admin> getAdmins() {
 		HashSet<Admin> admins = new HashSet<>();
@@ -326,12 +338,11 @@ public class Database implements Serializable {
 		}
 		return admins;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all users that are librarians.
+	 *
+	 * @return set of librarians
 	 */
 	public HashSet<Librarian> getLibrarians() {
 		HashSet<Librarian> librarians = new HashSet<>();
@@ -345,15 +356,20 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all of the courses independent of faculty from Database.
+	 *
+	 * @return set of courses
 	 */
 	public HashSet<Course> getCourses() {
 		return courses;
 	}
 
+	/**
+	 * Gets all courses that are under specific faculty.
+	 *
+	 * @param facultyName which faculty courses to retrieve
+	 * @return set of courses of provided faculty
+	 */
 	public HashSet<Course> getCoursesOf(FacultyName facultyName) {
 		HashSet<Course> resultantCourses = new HashSet<>();
 
@@ -364,17 +380,13 @@ public class Database implements Serializable {
 		}
 		return resultantCourses;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	public HashSet<Faculty> getFaculties() {
-		return faculties;
-	}
 
+	/**
+	 * Gets specific faculty by name.
+	 *
+	 * @param name name of the faculty
+	 * @return faculty
+	 */
 	public Faculty getFaculty(FacultyName name) {
 		for(Faculty faculty : faculties) {
 			if(faculty.getName() == name) {
@@ -385,24 +397,29 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Retrieves all user log actions.
+	 *
+	 * @return list of user log actions
 	 */
 	public ArrayList<String> getUserActions() {
 		return userActions;
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets all messages between employees.
+	 *
+	 * @return list of employee messages
 	 */
 	public ArrayList<Message> getMessages() {
 		return messages;
 	}
+
+	/**
+	 * Gets messages of specified employee.
+	 *
+	 * @param employee who's messages to get
+	 * @return list of messages
+	 */
 	public ArrayList<Message> getMessagesOf(Employee employee) {
 		ArrayList<Message> messagesOf = new ArrayList<>();
 
@@ -415,20 +432,20 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Gets statistical reports made by a manager.
+	 *
+	 * @return list of statistical reports
 	 */
 	public ArrayList<String> getReports() {
 		return reports;
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Retrieves the user by given login and password.
+	 *
+	 * @param login login of the user
+	 * @param password password of the user
+	 * @return retrieved user
 	 */
 	public User getUserByLoginAndPassword(String login, String password) {
 		User type = null;
@@ -438,78 +455,91 @@ public class Database implements Serializable {
 				type = user;
 			}
 		}
-
 		return type;
 	}
 
+	/**
+	 * Gets all logins and passwords of provided user type.
+	 *
+	 * @param user which type of users' credentials to get
+	 * @return map of credentials
+	 */
 	public HashMap<String, String> getUserLoginsAndPasswords(String user) {
 		return loginsAndPasswords.get(user);
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Adds employee message to Database.
+	 *
+	 * @param message message to add
 	 */
-	
-	public void setUserLoginAndPassword(String user, String login, String password) {
-		loginsAndPasswords.get(user).put(login, password);
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public void addMessage(Message message) {
 		messages.add(message);
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Adds the ready state report to Database.
+	 *
+	 * @param report report to add
 	 */
-	
 	public void addReport(String report) {
 		reports.add(report);
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Adds given user log action to Database.
+	 *
+	 * @param action action to add
 	 */
-	
 	public void addUserAction(String action) {
 		userActions.add(action);
 	}
-	
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Adds given course to Database.
+	 *
+	 * @param course course to add
 	 */
-	
-	public void addFaculty(Faculty faculty) {
-		faculties.add(faculty);
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public void addCourse(Course course) {
 		courses.add(course);
+	}
+
+	/**
+	 * Retrieves all requests for registration.
+	 *
+	 * @return map of requests
+	 */
+	public HashMap<Student, ArrayList<Course>> getCourseRegistrationRequests() {
+		return courseRegistrationRequests;
+	}
+
+	/**
+	 * Adds given request for registration to Database.
+	 *
+	 * @param student sender of the request
+	 * @param course requested course
+	 */
+	public void addCourseRegistrationRequest(Student student, Course course) {
+		courseRegistrationRequests.computeIfAbsent(student, (k) -> new ArrayList<>());
+		courseRegistrationRequests.get(student).add(course);
+	}
+
+	/**
+	 * Returns the list of news in Database. Is managed by a manager.
+	 *
+	 * @return list of news
+	 */
+	public ArrayList<News> getNews() {
+		return allNews;
+	}
+
+	/**
+	 * Adds the given news to Database.
+	 *
+	 * @param news news to add
+	 */
+	public void addNews(News news) {
+		allNews.add(news);
 	}
 
 	/**
@@ -545,7 +575,6 @@ public class Database implements Serializable {
 			obj.close();
 			file.close();
 		} catch(IOException exc) {
-			System.out.println(exc.getMessage());
 			instance = new Database();
 		} catch(ClassNotFoundException exc) {
 			throw new IOException(("Failed to load the progress, class not found"));

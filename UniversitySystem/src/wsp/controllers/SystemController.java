@@ -76,9 +76,9 @@ public class SystemController {
 
         System.out.println("You are logging in as " + userType + "..");
         System.out.print("Enter login: ");
-        String login = readLogin();
+        String login = GlobalReader.reader.readLine();
         System.out.print("Enter password: ");
-        String password = readPassword();
+        String password = GlobalReader.reader.readLine();
 
         for(Map.Entry<String, String> loginPassword : Database.getInstance().getUserLoginsAndPasswords(userType).entrySet()) {
             if(loginPassword.getKey().equals(login)) {
@@ -103,7 +103,7 @@ public class SystemController {
     }
 
     public void finish() throws InterruptedException, IOException {
-        System.out.print("Logging out");
+        System.out.print("Exiting");
         Thread.sleep(400);
         System.out.print(".");
         Thread.sleep(600);
@@ -137,14 +137,6 @@ public class SystemController {
 
         assert(view != null);
         return view.start();
-    }
-
-    public String readLogin() throws IOException {
-        return GlobalReader.reader.readLine();
-    }
-
-    public String readPassword() throws IOException {
-        return GlobalReader.reader.readLine();
     }
 
     public boolean checkIfUsersExist(String userType) {

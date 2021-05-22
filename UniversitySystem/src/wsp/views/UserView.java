@@ -11,7 +11,7 @@ public abstract class UserView {
     public boolean start() throws InterruptedException, IOException {
         Thread.sleep(500);
 
-        System.out.println("\nSelect which type of action you want to perform, or X to cancel:");
+        System.out.println("\nSelect which type of action you want to perform, or X to logout:");
         System.out.println(getMenu());
 
         String choice = GlobalReader.reader.readLine();

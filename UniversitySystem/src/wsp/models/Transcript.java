@@ -8,7 +8,6 @@ import java.util.*;
  * <!--  end-user-doc  -->
  * @generated
  */
-
 public class Transcript implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
@@ -16,8 +15,7 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	private HashMap<Course, HashMap<Mark, Period>> marksOfCourses;
+	private TreeMap<Period, HashMap<Course, Mark>> marksOfCourses;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -25,7 +23,6 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double overallGpa;
 	
 	/**
@@ -34,7 +31,8 @@ public class Transcript implements Serializable {
 	 * @generated
 	 */
 	public Transcript() {
-		super();
+		marksOfCourses = new TreeMap<>();
+		overallGpa = 0;
 	}
 
 	/**
@@ -43,10 +41,19 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double determineOverallGpa() {
-		// TODO implement me
-		return 0.0;	
+		int credits = 0;
+		double products = 0;
+
+		for(Map.Entry<Period, HashMap<Course, Mark>> entry : marksOfCourses.entrySet()) {
+			for(Map.Entry<Course, Mark> courseMark : entry.getValue().entrySet()) {
+				credits += courseMark.getKey().getCreditsAmount();
+				products += (courseMark.getKey().getCreditsAmount() * courseMark.getValue().getGpa());
+			}
+		}
+		overallGpa = (products / credits);
+
+		return overallGpa;
 	}
 	
 	/**
@@ -55,9 +62,7 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public HashMap<Course, Mark> getMarksOfCourses() {
-		// TODO implement me
 		return null;	
 	}
 	
@@ -67,7 +72,6 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public Mark getMarkOfCourse(Course parameter) {
 		// TODO implement me
 		return null;	
@@ -81,8 +85,7 @@ public class Transcript implements Serializable {
 	 */
 	
 	public double getOverallGpa() {
-		// TODO implement me
-		return 0.0;	
+		return overallGpa;
 	}
 	
 	/**
@@ -91,9 +94,11 @@ public class Transcript implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public String viewMarks() {
-		// TODO implement me
 		return "";	
+	}
+
+	public TreeMap<Period, HashMap<Course, Mark>> getMarks() {
+		return marksOfCourses;
 	}
 }

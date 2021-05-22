@@ -1,7 +1,6 @@
 package wsp.models;
 
 import wsp.enums.Grade;
-
 import java.io.Serializable;
 
 /**
@@ -9,7 +8,6 @@ import java.io.Serializable;
  * <!--  end-user-doc  -->
  * @generated
  */
-
 public class Mark implements Serializable {
 	/**
 	 * <!-- begin-user-doc -->
@@ -17,7 +15,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double firstAttestation;
 	
 	/**
@@ -26,7 +23,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double secondAttestation;
 	
 	/**
@@ -35,7 +31,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double finalExam;
 	
 	/**
@@ -44,7 +39,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double overallDigital;
 	
 	/**
@@ -53,7 +47,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private Grade overallLetter;
 	
 	/**
@@ -62,7 +55,6 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private double gpa;
 	
 	/**
@@ -70,19 +62,69 @@ public class Mark implements Serializable {
 	 * <!--  end-user-doc  -->
 	 * @generated
 	 */
-	public Mark() {
-		super();
-	}
+	public Mark() {}
 
-	public Mark(double firstAttestation, double secondAttestation, double finalExam, double overallDigital,
-				Grade overallLetter, double gpa) {
-
+	public Mark(double firstAttestation, double secondAttestation, double finalExam) {
+		if(firstAttestation > 30 || secondAttestation > 30 || finalExam > 40 || (firstAttestation == secondAttestation && secondAttestation == finalExam && finalExam < 0)) {
+			throw new IllegalArgumentException("Illegal values for attestations!");
+		}
 		this.firstAttestation = firstAttestation;
 		this.secondAttestation = secondAttestation;
 		this.finalExam = finalExam;
-		this.overallDigital = overallDigital;
-		this.overallLetter = overallLetter;
-		this.gpa = gpa;
+		this.overallDigital = firstAttestation + secondAttestation + finalExam;
+		this.overallLetter = determineLetter();
+		this.gpa = determineGpa();
+	}
+
+	private Grade determineLetter() {
+		if(overallDigital <= 100 && overallDigital >= 95) {
+			return Grade.A;
+		}
+		else if(overallDigital >= 90) {
+			return Grade.A_MINUS;
+		}
+		else if(overallDigital >= 85) {
+			return Grade.B_PLUS;
+		}
+		else if(overallDigital >= 80) {
+			return Grade.B;
+		}
+		else if(overallDigital >= 75) {
+			return Grade.B_MINUS;
+		}
+		else if(overallDigital >= 70) {
+			return Grade.C_PLUS;
+		}
+		else if(overallDigital >= 65) {
+			return Grade.C;
+		}
+		else if(overallDigital >= 60) {
+			return Grade.C_MINUS;
+		}
+		else if(overallDigital >= 55) {
+			return Grade.D_PLUS;
+		}
+		else if(overallDigital >= 50) {
+			return Grade.D;
+		} else {
+			return Grade.F;
+		}
+	}
+
+	private double determineGpa() {
+		switch(overallLetter) {
+			case A -> { return 4.00; }
+			case A_MINUS -> { return 3.67; }
+			case B_PLUS -> { return 3.33; }
+			case B -> { return 3.00; }
+			case B_MINUS -> { return 2.67; }
+			case C_PLUS -> { return 2.33; }
+			case C -> { return 2.00; }
+			case C_MINUS -> { return 1.67; }
+			case D_PLUS -> { return 1.33; }
+			case D -> { return 1.00; }
+			default -> { return 0.00; }
+		}
 	}
 
 	/**
@@ -91,9 +133,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double getFirstAttestation() {
-		// TODO implement me
 		return firstAttestation;
 	}
 	
@@ -103,9 +143,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double getSecondAttestation() {
-		// TODO implement me
 		return secondAttestation;
 	}
 	
@@ -115,9 +153,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double getFinalExam() {
-		// TODO implement me
 		return finalExam;
 	}
 	
@@ -127,9 +163,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double getOverallDigital() {
-		// TODO implement me
 		return overallDigital;
 	}
 	
@@ -139,9 +173,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public Grade getOverallLetter() {
-		// TODO implement me
 		return overallLetter;
 	}
 	
@@ -151,9 +183,7 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	public double getGpa() {
-		// TODO implement me
 		return gpa;
 	}
 	
@@ -163,10 +193,8 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	public void setFirstAttestation(double parameter) {
-		// TODO implement me
-
+	public void setFirstAttestation(double firstAttestation) {
+		this.firstAttestation = firstAttestation;
 	}
 	
 	/**
@@ -175,10 +203,8 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	public void setSecondAttestation(double parameter) {
-		// TODO implement me
-
+	public void setSecondAttestation(double secondAttestation) {
+		this.secondAttestation = secondAttestation;
 	}
 	
 	/**
@@ -187,45 +213,12 @@ public class Mark implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
-	public void setFinalExam(double parameter) {
-		// TODO implement me
-
+	public void setFinalExam(double finalExam) {
+		this.finalExam = finalExam;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void setOverallDigital(double parameter) {
-		// TODO implement me
 
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void setOverallLetter(Grade parameter) {
-		// TODO implement me
-
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void setGpa(double parameter) {
-		// TODO implement me
-
+	@Override
+	public String toString() {
+		return firstAttestation + "  " + secondAttestation + "  " + finalExam + "  " + overallDigital + "  " + gpa;
 	}
 }

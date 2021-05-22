@@ -1,14 +1,15 @@
 package wsp.views;
 
 import wsp.database.Database;
+import wsp.enums.AttestationSeason;
+import wsp.enums.FacultyName;
 import wsp.models.*;
 import wsp.utils.GlobalReader;
 import wsp.utils.Util;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.StringTokenizer;
+import java.io.PrintWriter;
+import java.util.*;
 
 public class StudentView extends UserView {
     private Student student;
@@ -16,12 +17,14 @@ public class StudentView extends UserView {
     public StudentView() {
         setMenu(
                 "--------------------------\n" +
-                "|1| View courses\n" +
-                "|2| Register for a course\n" +
-                "|3| View transcript\n" +
-                "|4| Rate teacher\n" +
-                "|5| Download transcript\n" +
-                "|X| Cancel\n" +
+                "|1| View personal data\n" +
+                "|2| View courses\n" +
+                "|3| Register for a course\n" +
+                "|4| View transcript\n" +
+                "|5| Rate teacher\n" +
+                "|6| Download transcript\n" +
+                "|7| View news\n" +
+                "|X| Logout\n" +
                 "--------------------------"
         );
     }
@@ -29,18 +32,25 @@ public class StudentView extends UserView {
     public StudentView(Student student) {
         this();
         this.student = student;
+        this.student.getCourses().add((Course) Database.getInstance().getCoursesOf(FacultyName.FIT).toArray()[0]);
+        this.student.getCourses().add((Course) Database.getInstance().getCoursesOf(FacultyName.SECMC).toArray()[0]);
+        Period period1 = new Period(2021, AttestationSeason.FALL);
+        this.student.getTranscript().getMarks().put(period1, new HashMap<>());
+        this.student.getTranscript().getMarks().get(period1).put(student.getCourses().get(0), new Mark(28, 28, 39));
         greet();
     }
 
     @Override
     public boolean performAction(String choice) throws IOException, InterruptedException {
         switch(choice.toLowerCase()) {
-            case "1" -> viewCourses();
-            case "2" -> registerForCourse();
-            case "3" -> viewTranscript();
-            case "4" -> rateTeacher();
-            case "5" -> downloadTranscript();
-            case "6", "x", "q", "exit", "quit" -> {
+            case "1" -> viewPersonalData();
+            case "2" -> viewCourses();
+            case "3" -> registerForCourse();
+            case "4" -> viewTranscript();
+            case "5" -> rateTeacher();
+            case "6" -> downloadTranscript();
+            case "7" -> viewNews();
+            case "8", "x", "q", "exit", "quit" -> {
                 System.out.println("Logging out.. Goodbye, " + student.getName() + "!");
                 return false;
             }
@@ -56,6 +66,13 @@ public class StudentView extends UserView {
     public void greet() {
         System.out.println("Welcome, " + student.getName() + "!");
         Database.getInstance().addUserAction("User " + student.getName() + " (Student) logged in at " + new Date().toString());
+    }
+
+    public void viewPersonalData() throws InterruptedException {
+        System.out.println("Student: |" + student.getId() + "| " + student.getName() + " " + student.getSurname());
+        System.out.println("Year of study: " + student.getYearOfStudy() + "\nDegree: " + student.getDegree());
+        System.out.println("Faculty: " + student.getFaculty().getName() + "\nSpecialty: " + student.getSpecialty().getName() + "\nGPA: " + student.getGpa());
+        Thread.sleep(1000);
     }
 
     public void viewCourses() throws IOException, InterruptedException {
@@ -94,13 +111,113 @@ public class StudentView extends UserView {
         }
     }
 
-    public void registerForCourse() {}
+    public void registerForCourse() throws IOException, InterruptedException {
+        int creditsSum = student.getCourses().stream().mapToInt(Course::getCreditsAmount).sum();
+        ArrayList<Course> courses = new ArrayList<>(Database.getInstance().getCoursesOf(student.getFaculty().getName()));
+        courses.addAll(Database.getInstance().getCoursesOf(FacultyName.GEF));
 
-    public void viewTranscript() {}
+        System.out.println("Total taken credits: " + creditsSum + ". Can't be more than 21");
+        System.out.println("List of courses available for registration: ");
 
-    public void rateTeacher() {}
+        for(int i = 0; i < courses.size(); i++) {
+            if(courses.get(i).getFaculty() == FacultyName.GEF) {
+                System.out.println((i + 1) + ") " + Util.COLOR_BLUE + "(Elective) " + Util.COLOR_RESET + courses.get(i) + ". Credits: " + courses.get(i).getCreditsAmount());
+            } else {
+                System.out.println((i + 1) + ") " + courses.get(i) + ". Credits: " + courses.get(i).getCreditsAmount());
+            }
+        }
 
-    public void downloadTranscript() {}
+        System.out.print("\nSelect the course to register: ");
+        int choice = Util.parseChoice(GlobalReader.reader.readLine());
+        if(choice < 0) {
+            System.out.println("Invalid input");
+            return;
+        }
+        if(Util.isInRange(choice, 0, courses.size() - 1)) {
+            if(student.getCourses().contains(courses.get(choice))) {
+                System.out.println("Course is already registered");
+                return;
+            }
+            if(courses.get(choice).getCreditsAmount() + creditsSum > 21) {
+                System.out.println("Impossible to register, limit of credits exceeded");
+                return;
+            }
+            Database.getInstance().addCourseRegistrationRequest(student, courses.get(choice));
+            System.out.println("Your request has been accepted! Waiting for manager's approval..");
+            System.out.println(Database.getInstance().getCourseRegistrationRequests());
+            Thread.sleep(500);
+        } else {
+            System.out.println("Unexpected input");
+        }
+    }
+
+    public void viewTranscript() {
+        System.out.println("Your overall GPA: " + student.getTranscript().determineOverallGpa());
+        System.out.println("Course; First attestation; Second attestation; Final points; Overall; Course GPA");
+        for(Map.Entry<Period, HashMap<Course, Mark>> entry : student.getTranscript().getMarks().entrySet()) {
+            System.out.println(entry.getKey() + ":");
+            int index = 1;
+            for(Map.Entry<Course, Mark> courseMark : entry.getValue().entrySet()) {
+                System.out.println(index + ") " + courseMark.getKey() + ": " + courseMark.getValue());
+                index++;
+            }
+            System.out.println();
+        }
+    }
+
+    public void rateTeacher() throws IOException {
+        ArrayList<Course> courses = student.getCourses();
+        System.out.println("Your courses: ");
+
+        for(int i = 0; i < courses.size(); i++) {
+            System.out.println((i + 1) + ") " + courses.get(i));
+        }
+        System.out.print("\nWhich course teachers you wish to rate: ");
+        int choice = Util.parseChoice(GlobalReader.reader.readLine());
+
+        ArrayList<Teacher> teachers = new ArrayList<>(Database.getInstance().getCourseTeachers(courses.get(choice)));
+        if(teachers.isEmpty()) {
+            System.out.println("No instructors for this course yet");
+            return;
+        }
+        viewCourseTeachers(courses.get(choice));
+
+        System.out.print("Now select the teacher: ");
+        choice = Util.parseChoice(GlobalReader.reader.readLine());
+        System.out.print("Enter your rating (10 points scale): ");
+        double rating = Double.parseDouble(GlobalReader.reader.readLine());
+        try {
+            teachers.get(choice).setRating(rating);
+        } catch(IndexOutOfBoundsException exc) {
+            System.out.println("Out of range");
+            return;
+        }
+        System.out.println("Thanks for your rating!");
+    }
+
+    public void downloadTranscript() {
+        try {
+            String fileName = "transcript_" + student.getName().toLowerCase() + ".txt";
+            PrintWriter writer = new PrintWriter(new FileWriter(fileName, true));
+            for(Map.Entry<Period, HashMap<Course, Mark>> entry : student.getTranscript().getMarks().entrySet()) {
+                writer.write(entry.getKey() + ":\n");
+                int index = 1;
+                for(Map.Entry<Course, Mark> courseMark : entry.getValue().entrySet()) {
+                    writer.write(index + ") " + courseMark.getKey() + ": " + courseMark.getValue() + "\n");
+                    index++;
+                }
+                writer.write("\n");
+            }
+            writer.close();
+            System.out.println("Transcript was successfully downloaded!");
+        } catch(IOException exc) {
+            System.out.println("Failed to download the transcript.. Error message: " + exc.getMessage());
+        }
+    }
+
+    public void viewNews() {
+        Util.viewNews();
+    }
 
     public void viewCourseDetails(Course course) throws IOException {
         System.out.println("Course: " + course);
@@ -162,7 +279,8 @@ public class StudentView extends UserView {
             int index = 1;
             for(Teacher teacher : teachers) {
                 System.out.println(index + ") " + teacher.getName() + " " + teacher.getSurname()
-                    + ", " + teacher.getTitle() + ", " + teacher.getExperience() + " years of experience");
+                    + ", " + teacher.getTitle() + ", " + teacher.getExperience()
+                    + " years of experience, rating: " + teacher.getRating());
                 index++;
             }
         } else {

@@ -8,15 +8,13 @@ import java.io.Serializable;
  * <!--  end-user-doc  -->
  * @generated
  */
-
-public class Period implements Serializable {
+public class Period implements Serializable, Comparable<Period> {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!--  end-user-doc  -->
 	 * @generated
 	 * @ordered
 	 */
-	
 	private int year;
 	
 	/**
@@ -25,7 +23,6 @@ public class Period implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
 	private AttestationSeason season;
 	
 	/**
@@ -41,28 +38,30 @@ public class Period implements Serializable {
 		this.year = year;
 		this.season = season;
 	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	public int getYear() {
 		// TODO implement me
 		return year;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	public AttestationSeason getSeason() {
 		// TODO implement me
 		return season;
+	}
+
+	@Override
+	public int compareTo(Period o) {
+		if(year == o.year) {
+			if(season == o.season) {
+				return 0;
+			}
+			return (season == AttestationSeason.SPRING && o.season == AttestationSeason.FALL) ? 1 : -1;
+		}
+		return (year > o.year) ? 1 : -1;
+	}
+
+	@Override
+	public String toString() {
+		return year + " " + season;
 	}
 }

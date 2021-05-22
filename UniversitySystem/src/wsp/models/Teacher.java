@@ -49,6 +49,8 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	 */
 	
 	private double rating;
+
+	private int ratedBy;
 	
 	/**
 	 * <!-- begin-user-doc -->
@@ -67,6 +69,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 		this.experience = experience;
 		this.courses = courses;
 		this.rating = rating;
+		ratedBy = 0;
 	}
 
 	/**
@@ -133,13 +136,9 @@ public class Teacher extends Employee implements CanAlterCourseData {
 		this.title = title;
 	}
 
-	public void setRating(User user, double rating) throws IllegalOperationException {
-		int count = 0x000F; //TODO temporary
-		if(user instanceof CanRateTeacher) {
-			this.rating += (rating - this.rating) / count;
-		} else {
-			throw new IllegalOperationException("Only students can rate teachers!");
-		}
+	public void setRating(double rating) {
+		ratedBy++;
+		this.rating += (rating - this.rating) / ratedBy;
 	}
 	
 	/**
@@ -200,10 +199,5 @@ public class Teacher extends Employee implements CanAlterCourseData {
 	public Course getCourse(String name) {
 		// TODO implement me
 		return null;	
-	}
-
-	@Override
-	public String toString() {
-		return "";
 	}
 }
