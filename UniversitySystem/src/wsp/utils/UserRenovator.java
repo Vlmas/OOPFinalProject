@@ -30,7 +30,7 @@ public class UserRenovator {
             }
             System.out.println("|X| Cancel");
 
-        } while(updateChosenField(GlobalReader.reader.readLine()));
+        } while(updateChosenField(Util.reader.readLine()));
     }
 
     public boolean updateChosenField(String choice) throws IOException, InterruptedException {
@@ -54,21 +54,21 @@ public class UserRenovator {
     public void updateName() throws IOException {
         System.out.println("Previous name: " + user.getName());
         System.out.print("Enter a new name: ");
-        user.setName(GlobalReader.reader.readLine());
+        user.setName(Util.reader.readLine());
         System.out.println("Name has been updated");
     }
 
     public void updateSurname() throws IOException {
         System.out.println("Previous surname: " + user.getSurname());
         System.out.print("Enter a new surname: ");
-        user.setSurname(GlobalReader.reader.readLine());
+        user.setSurname(Util.reader.readLine());
         System.out.println("Surname has been updated");
     }
 
     public void updatePassword() throws IOException {
         System.out.println("Previous password: " + user.getPassword());
         System.out.print("Enter a new password: ");
-        user.setPassword(GlobalReader.reader.readLine());
+        user.setPassword(Util.reader.readLine());
         Database.getInstance().getUserLoginsAndPasswords(
                 user.getClass().getSimpleName().toLowerCase()
         ).put(user.getLogin(), user.getPassword());
@@ -80,7 +80,7 @@ public class UserRenovator {
         System.out.print("Enter a new salary: ");
 
         try {
-            ((Employee) user).setSalary(Double.parseDouble(GlobalReader.reader.readLine()));
+            ((Employee) user).setSalary(Double.parseDouble(Util.reader.readLine()));
             System.out.println("Salary has been updated");
         } catch (IOException exc) {
             System.out.println(exc.getMessage());
@@ -95,7 +95,7 @@ public class UserRenovator {
         System.out.println("Previous title: " + ((Teacher) user).getTitle() + "\nEnter the new title:");
         System.out.println("|1| Tutor\n|2| Lector\n|3| Senior Lector\n|4| Professor\n|5| Associative Professor");
 
-        switch(GlobalReader.reader.readLine()) {
+        switch(Util.reader.readLine()) {
             case "1" -> ((Teacher) user).setTitle(TeacherTitle.TUTOR);
             case "2" -> ((Teacher) user).setTitle(TeacherTitle.LECTOR);
             case "3" -> ((Teacher) user).setTitle(TeacherTitle.SENIOR_LECTOR);
@@ -114,7 +114,7 @@ public class UserRenovator {
         System.out.print("Previous year of study: " + ((Student) user).getYearOfStudy()
                 + "\nEnter a new year of study: ");
 
-        switch(GlobalReader.reader.readLine()) {
+        switch(Util.reader.readLine()) {
             case "1" -> ((Student) user).setYearOfStudy(YearOfStudy.FIRST);
             case "2" -> ((Student) user).setYearOfStudy(YearOfStudy.SECOND);
             case "3" -> ((Student) user).setYearOfStudy(YearOfStudy.THIRD);
@@ -133,7 +133,7 @@ public class UserRenovator {
             System.out.println("|" + (i + 1) + "| " + specialties.get(i).getName());
         }
 
-        int choice = Util.parseChoice(GlobalReader.reader.readLine());
+        int choice = Util.parseChoice(Util.reader.readLine());
         if(choice < 0) {
             System.out.println("Enter a number!");
             Thread.sleep(500);

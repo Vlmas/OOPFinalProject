@@ -129,38 +129,6 @@ public class Student extends User implements CanRateTeacher {
 		this.gpa = transcript.determineOverallGpa();
 		return gpa;
 	}
-	
-	/**
-	 * Compares the specified object with this student. Returns {@code true} when both objects are of the
-	 * same reference, or when they share the same GPA, year of study, degree, faculty, specialty, courses
-	 * and transcript. Otherwise will return {@code false}.
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) {
-			return true;
-		}
-		if(o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		if(!super.equals(o)) {
-			return false;
-		}
-		Student student = (Student) o;
-		return (Double.compare(student.gpa, gpa) == 0 && yearOfStudy == student.yearOfStudy
-				&& degree == student.degree && Objects.equals(faculty, student.faculty)
-				&& Objects.equals(specialty, student.specialty) && Objects.equals(courses, student.courses)
-				&& Objects.equals(transcript, student.transcript)
-		);
-	}
-
-	/**
-	 * Returns the hash code value for this object.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(super.hashCode(), yearOfStudy, degree, faculty, specialty, courses, transcript, gpa);
-	}
 
 	/**
 	 * Sets the rating of a specified teacher. Not sets the exact value, average rating is calculated
@@ -173,5 +141,16 @@ public class Student extends User implements CanRateTeacher {
 	@Override
 	public void rateTeacher(Teacher teacher, double rating) {
 		teacher.setRating(rating);
+	}
+
+	/**
+	 * String representation of the student.
+	 *
+	 * @return student as string
+	 */
+	@Override
+	public String toString() {
+		return (super.toString() + ". Year of study: " + yearOfStudy + ". Degree: " + degree
+		+ ". Faculty: " + faculty.getName() + ". Specialty: " + specialty.getName() + ". GPA: " + gpa);
 	}
 }

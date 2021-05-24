@@ -179,10 +179,7 @@ public abstract class User implements Cloneable, Serializable, Comparable<User> 
 			return false;
 		}
 		User user = (User) o;
-		return (name.equals(user.name) && surname.equals(user.surname)
-				&& id.equals(user.id) && login.equals(user.login)
-				&& password.equals(user.password)
-		);
+		return login.equals(user.login);
 	}
 
 	/**

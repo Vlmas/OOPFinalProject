@@ -2,15 +2,24 @@ package wsp.utils;
 
 import wsp.database.Database;
 import wsp.models.News;
+import wsp.models.User;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Util {
+public class Util implements Serializable {
     public static final String COLOR_RESET = "\033[0m";
     public static final String COLOR_BLACK = "\033[0;30m";
     public static final String COLOR_RED = "\033[0;31m";
     public static final String COLOR_GREEN = "\033[0;32m";
     public static final String COLOR_BLUE = "\033[0;34m";
     public static final String COLOR_WHITE = "\033[0;37m";
+    public static BufferedReader reader;
+
+    static {
+        reader = new BufferedReader(new InputStreamReader(System.in));
+    }
 
     private Util() {}
 
@@ -41,5 +50,30 @@ public class Util {
         } else {
             System.out.println("No news for now");
         }
+    }
+
+    public static<T> void printList(Iterable<T> list) {
+        int index = 1;
+        for(T type : list) {
+            System.out.println(index + ") " + type);
+            index++;
+        }
+    }
+
+    public static<T extends User> void printUserList(Iterable<T> users) {
+        int index = 1;
+        for(T user : users) {
+            System.out.println(index + ") " + user.getName() + " " + user.getSurname()
+                    + " (" + user.getClass().getSimpleName() + ")");
+            index++;
+        }
+    }
+
+    public static void printSingleMap() {
+
+    }
+
+    public static void printMultiMap() {
+
     }
 }

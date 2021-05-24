@@ -1,10 +1,8 @@
 package wsp.views;
 
 import wsp.database.Database;
-import wsp.enums.AttestationSeason;
 import wsp.enums.FacultyName;
 import wsp.models.*;
-import wsp.utils.GlobalReader;
 import wsp.utils.Util;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,11 +30,6 @@ public class StudentView extends UserView {
     public StudentView(Student student) {
         this();
         this.student = student;
-        this.student.getCourses().add((Course) Database.getInstance().getCoursesOf(FacultyName.FIT).toArray()[0]);
-        this.student.getCourses().add((Course) Database.getInstance().getCoursesOf(FacultyName.SECMC).toArray()[0]);
-        Period period1 = new Period(2021, AttestationSeason.FALL);
-        this.student.getTranscript().getMarks().put(period1, new HashMap<>());
-        this.student.getTranscript().getMarks().get(period1).put(student.getCourses().get(0), new Mark(28, 28, 39));
         greet();
     }
 
@@ -91,7 +84,7 @@ public class StudentView extends UserView {
         }
 
         System.out.println("\nChoose a course to view some of its details, or X to skip");
-        String chosen = GlobalReader.reader.readLine();
+        String chosen = Util.reader.readLine();
         if(chosen.equalsIgnoreCase("X")) {
             System.out.println("Operation was skipped");
             return;
@@ -128,7 +121,7 @@ public class StudentView extends UserView {
         }
 
         System.out.print("\nSelect the course to register: ");
-        int choice = Util.parseChoice(GlobalReader.reader.readLine());
+        int choice = Util.parseChoice(Util.reader.readLine());
         if(choice < 0) {
             System.out.println("Invalid input");
             return;
@@ -138,13 +131,18 @@ public class StudentView extends UserView {
                 System.out.println("Course is already registered");
                 return;
             }
+            if(Database.getInstance().getCourseRegistrationRequests().containsKey(student)) {
+                if (Database.getInstance().getCourseRegistrationRequests().get(student).contains(courses.get(choice))) {
+                    System.out.println("Registration request is already sent");
+                    return;
+                }
+            }
             if(courses.get(choice).getCreditsAmount() + creditsSum > 21) {
                 System.out.println("Impossible to register, limit of credits exceeded");
                 return;
             }
             Database.getInstance().addCourseRegistrationRequest(student, courses.get(choice));
             System.out.println("Your request has been accepted! Waiting for manager's approval..");
-            System.out.println(Database.getInstance().getCourseRegistrationRequests());
             Thread.sleep(500);
         } else {
             System.out.println("Unexpected input");
@@ -167,32 +165,34 @@ public class StudentView extends UserView {
 
     public void rateTeacher() throws IOException {
         ArrayList<Course> courses = student.getCourses();
-        System.out.println("Your courses: ");
+        if(!courses.isEmpty()) {
+            System.out.println("Your courses: ");
 
-        for(int i = 0; i < courses.size(); i++) {
-            System.out.println((i + 1) + ") " + courses.get(i));
-        }
-        System.out.print("\nWhich course teachers you wish to rate: ");
-        int choice = Util.parseChoice(GlobalReader.reader.readLine());
+            Util.printList(courses);
+            System.out.print("\nWhich course teachers you wish to rate: ");
+            int choice = Util.parseChoice(Util.reader.readLine());
 
-        ArrayList<Teacher> teachers = new ArrayList<>(Database.getInstance().getCourseTeachers(courses.get(choice)));
-        if(teachers.isEmpty()) {
-            System.out.println("No instructors for this course yet");
+            ArrayList<Teacher> teachers = new ArrayList<>(Database.getInstance().getCourseTeachers(courses.get(choice)));
+            if (teachers.isEmpty()) {
+                System.out.println("No instructors for this course yet");
+                return;
+            }
+            viewCourseTeachers(courses.get(choice));
+
+            System.out.print("Now select the teacher: ");
+            choice = Util.parseChoice(Util.reader.readLine());
+            System.out.print("Enter your rating (10 points scale): ");
+            double rating = Double.parseDouble(Util.reader.readLine());
+            try {
+                teachers.get(choice).setRating(rating);
+            } catch (IndexOutOfBoundsException exc) {
+                System.out.println("Out of range");
+                return;
+            }
+            System.out.println("Thanks for your rating!");
             return;
         }
-        viewCourseTeachers(courses.get(choice));
-
-        System.out.print("Now select the teacher: ");
-        choice = Util.parseChoice(GlobalReader.reader.readLine());
-        System.out.print("Enter your rating (10 points scale): ");
-        double rating = Double.parseDouble(GlobalReader.reader.readLine());
-        try {
-            teachers.get(choice).setRating(rating);
-        } catch(IndexOutOfBoundsException exc) {
-            System.out.println("Out of range");
-            return;
-        }
-        System.out.println("Thanks for your rating!");
+        System.out.println("You don't have any courses yet");
     }
 
     public void downloadTranscript() {
@@ -224,7 +224,7 @@ public class StudentView extends UserView {
         System.out.println("|1| View course description\n|2| View course details\n|3| View course files\n" +
                 "|4| View course teachers");
 
-        switch(GlobalReader.reader.readLine().toLowerCase()) {
+        switch(Util.reader.readLine().toLowerCase()) {
             case "1" -> viewCourseDescription(course);
             case "2" -> viewCourseNotion(course);
             case "3" -> viewCourseFiles(course);
@@ -276,13 +276,7 @@ public class StudentView extends UserView {
         HashSet<Teacher> teachers = Database.getInstance().getCourseTeachers(course);
 
         if(!teachers.isEmpty()) {
-            int index = 1;
-            for(Teacher teacher : teachers) {
-                System.out.println(index + ") " + teacher.getName() + " " + teacher.getSurname()
-                    + ", " + teacher.getTitle() + ", " + teacher.getExperience()
-                    + " years of experience, rating: " + teacher.getRating());
-                index++;
-            }
+            Util.printUserList(teachers);
         } else {
             System.out.println("This course doesn't have any instructor yet");
         }

@@ -1,6 +1,5 @@
 package wsp.controllers;
 
-import wsp.database.Database;
 import wsp.exceptions.FailedLogInException;
 import java.io.IOException;
 

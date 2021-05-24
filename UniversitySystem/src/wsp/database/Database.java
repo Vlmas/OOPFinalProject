@@ -1,9 +1,8 @@
 package wsp.database;
 
-import wsp.enums.FacultyName;
-import wsp.enums.LessonType;
-import wsp.enums.TeacherTitle;
+import wsp.enums.*;
 import wsp.models.*;
+import wsp.utils.Util;
 import java.io.*;
 import java.time.DayOfWeek;
 import java.util.*;
@@ -90,7 +89,7 @@ public class Database implements Serializable {
 		initializeFaculties();
 		initializeCourses();
 		initializeUsers();
-		addNews(new News("WSP started its work!", "Great times are ahead, enjoy!!", new ArrayList<>() {{ add("That's very cool"); add("Nice, I'm happy"); }}, new Date()));
+		addNews(new News("WSP started its work!", "Great times are ahead, enjoy!!", new ArrayList<>() {{ add(Util.COLOR_WHITE + "That's very cool." + Util.COLOR_RESET); add(Util.COLOR_WHITE + "Nice, I'm happy." + Util.COLOR_RESET); }}, new Date()));
 	}
 
 	private void initializeLoginPasswords() {
@@ -127,6 +126,9 @@ public class Database implements Serializable {
 	private void initializeUsers() {
 		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 500000));
 		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi@kbtu.kz", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>() {{ add((Course) courses.toArray()[0]); }}, 0));
+		addUser(new Manager("Nazym", "Aidarkhanova", "MAIN1MNG", "n_aidarkhanova@kbtu.kz", "Nazym", 450000, ManagerType.OR));
+		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov@kbtu.kz", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new ArrayList<>(), new Transcript(), 0));
+		addUser(new Librarian("Lib", "Lib", "LIB", "libr@kbtu.kz", "Book", 400000, new HashMap<>()));
 	}
 
 	private void initializeCourses() {
@@ -556,7 +558,7 @@ public class Database implements Serializable {
 			obj.close();
 			file.close();
 		} catch(IOException exc) {
-			throw new IOException("Couldn't save the current progress");
+			throw new IOException("Couldn't save the current progress." + exc.getMessage() + ":" + exc.getCause());
 		}
 	}
 

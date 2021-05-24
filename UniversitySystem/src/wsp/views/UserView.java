@@ -1,6 +1,6 @@
 package wsp.views;
 
-import wsp.utils.GlobalReader;
+import wsp.utils.Util;
 import java.io.IOException;
 
 public abstract class UserView {
@@ -14,7 +14,7 @@ public abstract class UserView {
         System.out.println("\nSelect which type of action you want to perform, or X to logout:");
         System.out.println(getMenu());
 
-        String choice = GlobalReader.reader.readLine();
+        String choice = Util.reader.readLine();
 
         if(performAction(choice)) {
             return start();

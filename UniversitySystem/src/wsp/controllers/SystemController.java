@@ -3,7 +3,7 @@ package wsp.controllers;
 import wsp.database.Database;
 import wsp.exceptions.FailedLogInException;
 import wsp.models.*;
-import wsp.utils.GlobalReader;
+import wsp.utils.Util;
 import wsp.views.*;
 import java.io.IOException;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class SystemController {
         System.out.println("\nPlease, select the type of user to log in, or X to exit:");
         System.out.println("--------------\n|1| Admin\n|2| Manager\n|3| Teacher\n|4| Librarian\n|5| Student\n|X| Exit\n--------------");
 
-        String choice = GlobalReader.reader.readLine();
+        String choice = Util.reader.readLine();
 
         switch(choice.toLowerCase()) {
             case "1" -> {
@@ -76,9 +76,9 @@ public class SystemController {
 
         System.out.println("You are logging in as " + userType + "..");
         System.out.print("Enter login: ");
-        String login = GlobalReader.reader.readLine();
+        String login = Util.reader.readLine();
         System.out.print("Enter password: ");
-        String password = GlobalReader.reader.readLine();
+        String password = Util.reader.readLine();
 
         for(Map.Entry<String, String> loginPassword : Database.getInstance().getUserLoginsAndPasswords(userType).entrySet()) {
             if(loginPassword.getKey().equals(login)) {

@@ -59,7 +59,7 @@ public class AdminView extends UserView {
     public void addUser() throws IOException, InterruptedException {
         System.out.println("Choose which type of user you want to add, or X to cancel:");
         System.out.println("|1| Admin\n|2| Manager\n|3| Teacher\n|4| Librarian\n|5| Student\n|X| Cancel");
-        String chosenUser = determineUser(GlobalReader.reader.readLine());
+        String chosenUser = determineUser(Util.reader.readLine());
 
         if(chosenUser.equals("exit") || chosenUser.equals("unknown")) {
             System.out.println("Operation was canceled");
@@ -67,26 +67,27 @@ public class AdminView extends UserView {
         }
         UserFactory factory = new UserFactory();
         User user = factory.createUser(chosenUser);
-        admin.addUser(user);
-
-        System.out.println(user);
-        Thread.sleep(500);
-        System.out.println("Don't forget your password, write it down somewhere!!!");
+        if(!Database.getInstance().getUserLoginsAndPasswords(user.getClass().getSimpleName().toLowerCase()).containsKey(user.getLogin())) {
+            admin.addUser(user);
+            System.out.println("Added user " + user);
+            Thread.sleep(500);
+            System.out.println("Don't forget your password, write it down somewhere!!!");
+        } else {
+            System.out.println("Such user already exists");
+        }
         Thread.sleep(1500);
     }
 
     public void removeUser() throws IOException {
-        Object[] users = Database.getInstance().getUsersExcept(admin).toArray();
+        ArrayList<User> users = new ArrayList<>(Database.getInstance().getUsersExcept(admin));
 
-        if(users.length > 0) {
+        if(users.size() > 0) {
             System.out.println("Select which user to remove, or X to cancel:");
 
-            for(int i = 0; i < users.length; i++) {
-                System.out.println((i + 1) + ") " + users[i]);
-            }
+            Util.printList(users);
             System.out.println("X) Cancel");
 
-            String chosen = GlobalReader.reader.readLine();
+            String chosen = Util.reader.readLine();
             if(chosen.equalsIgnoreCase("x")) {
                 return;
             }
@@ -97,8 +98,8 @@ public class AdminView extends UserView {
                 return;
             }
 
-            if(Util.isInRange(choice, 0, users.length - 1)) {
-                admin.removeUser((User) users[choice]);
+            if(Util.isInRange(choice, 0, users.size() - 1)) {
+                admin.removeUser((User) users.get(choice));
                 System.out.println("User has been removed!");
             } else {
                 System.out.println("Invalid input, not in range of users");
@@ -123,7 +124,7 @@ public class AdminView extends UserView {
         }
         System.out.println("X) Cancel");
 
-        String chosen = GlobalReader.reader.readLine();
+        String chosen = Util.reader.readLine();
         if(chosen.equalsIgnoreCase("X")) {
             System.out.println("Operation was cancelled");
             return;
@@ -150,14 +151,10 @@ public class AdminView extends UserView {
         if(!actions.isEmpty()) {
             System.out.println("User log actions up to now:");
 
-            int index = 1;
-            for(String action : actions) {
-                System.out.println(index + ") " + action);
-                index++;
-            }
+            Util.printList(actions);
             System.out.println("\nDo you wish to clear the history of log actions? Any key to answer No");
             System.out.println("|1| Yes\n|X| No");
-            String choice = GlobalReader.reader.readLine();
+            String choice = Util.reader.readLine();
 
             if(choice.equals("1")) {
                 actions.clear();
@@ -170,13 +167,7 @@ public class AdminView extends UserView {
 
     public void viewUsers() {
         HashSet<User> users = admin.getUsers();
-
-        int index = 1;
-        for(User user : users) {
-            System.out.println(index + ") " + user.getSurname()
-                    + " " + user.getName().charAt(0) + ". (" + user.getClass().getSimpleName() + ")");
-            index++;
-        }
+        Util.printUserList(users);
     }
 
     private String determineUser(String chosenUser) {
