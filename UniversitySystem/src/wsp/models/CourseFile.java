@@ -78,6 +78,6 @@ public class CourseFile implements Serializable {
 
 	@Override
 	public String toString() {
-		return name + ". Created at" + creationDate;
+		return name + ". Created at " + creationDate;
 	}
 }

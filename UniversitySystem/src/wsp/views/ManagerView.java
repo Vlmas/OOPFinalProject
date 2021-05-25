@@ -1,9 +1,6 @@
 package wsp.views;
 
-import wsp.comparators.GpaComparator;
-import wsp.comparators.IdComparator;
-import wsp.comparators.NameComparator;
-import wsp.comparators.SalaryComparator;
+import wsp.comparators.*;
 import wsp.database.Database;
 import wsp.enums.AttestationSeason;
 import wsp.models.*;
@@ -74,7 +71,7 @@ public class ManagerView extends UserView {
 
     public void viewStudents() throws IOException {
         ArrayList<Student> students = new ArrayList<>(Database.getInstance().getStudents());
-        System.out.println("Choose order of displaying:\n|1|By name\n|2| By GPA\n|3| By ID");
+        System.out.println("Choose order of displaying:\n|1| By name\n|2| By GPA\n|3| By ID");
         switch(Util.reader.readLine()) {
             case "1" -> students.sort(new NameComparator());
             case "2" -> students.sort(new GpaComparator());
@@ -86,7 +83,7 @@ public class ManagerView extends UserView {
 
     public void viewTeachers() throws IOException {
         ArrayList<Teacher> teachers = new ArrayList<>(Database.getInstance().getTeachers());
-        System.out.println("Choose order of displaying:\n|1|By name\n|2| By salary");
+        System.out.println("Choose order of displaying:\n|1| By name\n|2| By salary");
         switch(Util.reader.readLine()) {
             case "1" -> teachers.sort(new NameComparator());
             case "2" -> teachers.sort(new SalaryComparator());
@@ -208,7 +205,6 @@ public class ManagerView extends UserView {
 
         student.getTranscript().getMarks().putIfAbsent(period, new HashMap<>());
         for(Course course: courses) {
-            student.addCourse(course);
             student.getTranscript().getMarks().get(period).put(course, new Mark());
         }
         Database.getInstance().getCourseRegistrationRequests().remove(student);

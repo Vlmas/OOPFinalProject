@@ -1,12 +1,14 @@
 package wsp.utils;
 
 import wsp.database.Database;
-import wsp.models.News;
-import wsp.models.User;
+import wsp.enums.MessageType;
+import wsp.models.*;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Util implements Serializable {
     public static final String COLOR_RESET = "\033[0m";
@@ -69,11 +71,33 @@ public class Util implements Serializable {
         }
     }
 
-    public static void printSingleMap() {
+    public static void sendMessage(Employee sender, Employee receiver) throws IOException, InterruptedException {
+        MessageType type = null;
+        if(sender instanceof Teacher) {
+            System.out.println("What type is your message?\n|1| Letter\n|2| Request");
+            switch(reader.readLine()) {
+                case "1" -> type = MessageType.LETTER;
+                case "2" -> type = MessageType.REQUEST;
+            }
+        }
+        System.out.print("Enter the content of your message: ");
+        String content = reader.readLine();
+        boolean isSigned = false;
 
-    }
-
-    public static void printMultiMap() {
-
+        if(sender instanceof Teacher && receiver instanceof Manager && type == MessageType.REQUEST) {
+            System.out.println("Seems you are sending a request to a manager. It's highly recommended to put dean's sign on it, but it will take some time");
+            System.out.println("Will you sign it?\n|1| Yes |2| No");
+            switch(reader.readLine()) {
+                case "1" -> {
+                    System.out.println("Dean is signing...");
+                    isSigned = true;
+                    Thread.sleep(1500);
+                }
+                case "2" -> System.out.println("Okay");
+            }
+        }
+        Message message = new Message(sender, receiver, type, content, isSigned, new Date());
+        Database.getInstance().addMessage(message);
+        System.out.println("Message has been sent!");
     }
 }

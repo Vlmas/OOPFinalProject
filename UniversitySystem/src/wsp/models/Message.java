@@ -1,5 +1,7 @@
 package wsp.models;
 
+import wsp.enums.MessageType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,7 +36,14 @@ public class Message implements Serializable {
 	 * @generated
 	 * @ordered
 	 */
-	
+	private MessageType type;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!--  end-user-doc  -->
+	 * @generated
+	 * @ordered
+	 */
 	private String content;
 	
 	/**
@@ -64,9 +73,10 @@ public class Message implements Serializable {
 		super();
 	}
 
-	public Message(Employee from, Employee to, String content, boolean signed, Date postDate) {
+	public Message(Employee from, Employee to, MessageType type, String content, boolean signed, Date postDate) {
 		this.from = from;
 		this.to = to;
+		this.type = type;
 		this.content = content;
 		this.signed = signed;
 		this.postDate = postDate;
@@ -94,6 +104,10 @@ public class Message implements Serializable {
 	public Date getPostDate() {
 		// TODO implement me
 		return postDate;
+	}
+
+	public MessageType getType() {
+		return type;
 	}
 	
 	/**

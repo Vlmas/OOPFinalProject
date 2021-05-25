@@ -56,4 +56,8 @@ public class Librarian extends Employee {
 		// TODO implement me
 
 	}
+
+	public HashMap<Book, Integer> getLibrary() {
+		return library;
+	}
 }

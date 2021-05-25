@@ -52,11 +52,6 @@ public class Database implements Serializable {
 	 * Can be accessed for further manipulations.
 	 */
 	private ArrayList<Message> messages;
-	
-	/**
-	 * Contains statistical reports about students performance. Is made by manager.
-	 */
-	private ArrayList<String> reports;
 
 	/**
 	 * Contains all news in the system. They can be viewed by students and teachers. Manager
@@ -81,7 +76,6 @@ public class Database implements Serializable {
 		faculties = new HashSet<>();
 		userActions = new ArrayList<>();
 		messages = new ArrayList<>();
-		reports = new ArrayList<>();
 		allNews = new ArrayList<>();
 		courseRegistrationRequests = new HashMap<>();
 
@@ -125,9 +119,9 @@ public class Database implements Serializable {
 
 	private void initializeUsers() {
 		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 500000));
-		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi@kbtu.kz", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>() {{ add((Course) courses.toArray()[0]); }}, 0));
+		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi@kbtu.kz", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>(courses), 0));
 		addUser(new Manager("Nazym", "Aidarkhanova", "MAIN1MNG", "n_aidarkhanova@kbtu.kz", "Nazym", 450000, ManagerType.OR));
-		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov@kbtu.kz", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new ArrayList<>(), new Transcript(), 0));
+		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov@kbtu.kz", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
 		addUser(new Librarian("Lib", "Lib", "LIB", "libr@kbtu.kz", "Book", 400000, new HashMap<>()));
 	}
 
@@ -432,15 +426,6 @@ public class Database implements Serializable {
 		}
 		return messagesOf;
 	}
-	
-	/**
-	 * Gets statistical reports made by a manager.
-	 *
-	 * @return list of statistical reports
-	 */
-	public ArrayList<String> getReports() {
-		return reports;
-	}
 
 	/**
 	 * Retrieves the user by given login and password.
@@ -477,15 +462,6 @@ public class Database implements Serializable {
 	 */
 	public void addMessage(Message message) {
 		messages.add(message);
-	}
-
-	/**
-	 * Adds the ready state report to Database.
-	 *
-	 * @param report report to add
-	 */
-	public void addReport(String report) {
-		reports.add(report);
 	}
 
 	/**
@@ -576,10 +552,8 @@ public class Database implements Serializable {
 			instance = (Database) obj.readObject();
 			obj.close();
 			file.close();
-		} catch(IOException exc) {
+		} catch(IOException | ClassNotFoundException exc) {
 			instance = new Database();
-		} catch(ClassNotFoundException exc) {
-			throw new IOException(("Failed to load the progress, class not found"));
 		}
 	}
 }

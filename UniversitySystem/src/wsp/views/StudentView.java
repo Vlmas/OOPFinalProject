@@ -74,12 +74,16 @@ public class StudentView extends UserView {
         ArrayList<Course> courses = new ArrayList<>(Database.getInstance().getCourses());
         int index = 1;
 
+        first:
         for(Course course : courses) {
-            if(student.getCourses().contains(course)) {
-                System.out.println((index) + ") " + course + Util.COLOR_BLUE + " (Registered)" + Util.COLOR_RESET);
-            } else {
-                System.out.println((index) + ") " + course);
+            for(Map.Entry<Period, HashMap<Course, Mark>> entry : student.getTranscript().getMarks().entrySet()) {
+                if(entry.getValue().containsKey(course)) {
+                    System.out.println((index) + ") " + course + Util.COLOR_BLUE + " (Registered)" + Util.COLOR_RESET);
+                    index++;
+                    continue first;
+                }
             }
+            System.out.println((index) + ") " + course);
             index++;
         }
 
@@ -105,7 +109,7 @@ public class StudentView extends UserView {
     }
 
     public void registerForCourse() throws IOException, InterruptedException {
-        int creditsSum = student.getCourses().stream().mapToInt(Course::getCreditsAmount).sum();
+        int creditsSum = student.getTranscript().getCourses().stream().mapToInt(Course::getCreditsAmount).sum();
         ArrayList<Course> courses = new ArrayList<>(Database.getInstance().getCoursesOf(student.getFaculty().getName()));
         courses.addAll(Database.getInstance().getCoursesOf(FacultyName.GEF));
 
@@ -127,7 +131,7 @@ public class StudentView extends UserView {
             return;
         }
         if(Util.isInRange(choice, 0, courses.size() - 1)) {
-            if(student.getCourses().contains(courses.get(choice))) {
+            if(student.getTranscript().getCourses().contains(courses.get(choice))) {
                 System.out.println("Course is already registered");
                 return;
             }
@@ -164,7 +168,7 @@ public class StudentView extends UserView {
     }
 
     public void rateTeacher() throws IOException {
-        ArrayList<Course> courses = student.getCourses();
+        ArrayList<Course> courses = student.getTranscript().getCourses();
         if(!courses.isEmpty()) {
             System.out.println("Your courses: ");
 
@@ -264,9 +268,7 @@ public class StudentView extends UserView {
         ArrayList<CourseFile> files = course.getCourseFiles();
 
         if(!files.isEmpty()) {
-            for(CourseFile file : files) {
-                System.out.println(file);
-            }
+            Util.printList(files);
         } else {
             System.out.println("No files for this course yet");
         }

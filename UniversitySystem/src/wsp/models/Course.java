@@ -250,8 +250,7 @@ public class Course implements Serializable {
 	 */
 	
 	public void addCourseFile(CourseFile file) {
-		// TODO implement me
-
+		courseFiles.add(file);
 	}
 	
 	/**
@@ -281,5 +280,22 @@ public class Course implements Serializable {
 	@Override
 	public String toString() {
 		return name + " (" + faculty + ")";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) {
+			return true;
+		}
+		if(o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Course course = (Course) o;
+		return (creditsAmount == course.creditsAmount && Objects.equals(name, course.name) && Objects.equals(description, course.description) && Objects.equals(code, course.code) && faculty == course.faculty);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, description, code, faculty, creditsAmount);
 	}
 }

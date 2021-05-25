@@ -2,7 +2,6 @@ package wsp.models;
 
 import wsp.enums.*;
 import wsp.interfaces.CanRateTeacher;
-import java.util.*;
 
 /**
  * WSP University System's Student model. Represents the casual student of University.
@@ -37,11 +36,6 @@ public class Student extends User implements CanRateTeacher {
 	private Specialty specialty;
 	
 	/**
-	 * Students courses that he registered.
-	 */
-	private ArrayList<Course> courses;
-	
-	/**
 	 * Student's transcript. Represents the academic performance.
 	 */
 	private Transcript transcript;
@@ -57,27 +51,16 @@ public class Student extends User implements CanRateTeacher {
 	 * Creates a student with base user fields and specific student field such as year of study,
 	 * degree, etc.
 	 */
-	public Student(String name, String surname, String id, String login, String password,
-				   YearOfStudy yearOfStudy, Degree degree, Faculty faculty, Specialty specialty,
-				   ArrayList<Course> courses, Transcript transcript, double gpa) {
+	public Student(String name, String surname, String id, String login, String password, YearOfStudy yearOfStudy,
+				   Degree degree, Faculty faculty, Specialty specialty, Transcript transcript, double gpa) {
 
 		super(name, surname, id, login, password);
 		this.yearOfStudy = yearOfStudy;
 		this.degree = degree;
 		this.faculty = faculty;
 		this.specialty = specialty;
-		this.courses = courses;
 		this.transcript = transcript;
 		this.gpa = gpa;
-	}
-
-	/**
-	 * Adds the given course to students' course list.
-	 *
-	 * @param course course to add
-	 */
-	public void addCourse(Course course) {
-		courses.add(course);
 	}
 
 	public YearOfStudy getYearOfStudy() {
@@ -94,10 +77,6 @@ public class Student extends User implements CanRateTeacher {
 
 	public Specialty getSpecialty() {
 		return specialty;
-	}
-
-	public ArrayList<Course> getCourses() {
-		return courses;
 	}
 
 	public Transcript getTranscript() {

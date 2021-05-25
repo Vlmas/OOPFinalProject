@@ -44,7 +44,6 @@ public class Transcript implements Serializable {
 	public double determineOverallGpa() {
 		int credits = 0;
 		double products = 0;
-
 		for(Map.Entry<Period, HashMap<Course, Mark>> entry : marksOfCourses.entrySet()) {
 			for(Map.Entry<Course, Mark> courseMark : entry.getValue().entrySet()) {
 				credits += courseMark.getKey().getCreditsAmount();
@@ -100,5 +99,24 @@ public class Transcript implements Serializable {
 
 	public TreeMap<Period, HashMap<Course, Mark>> getMarks() {
 		return marksOfCourses;
+	}
+
+	public ArrayList<Course> getCourses() {
+		ArrayList<Course> courses = new ArrayList<>();
+		for(Map.Entry<Period, HashMap<Course, Mark>> entry : marksOfCourses.entrySet()) {
+			courses.addAll(entry.getValue().keySet());
+		}
+		return courses;
+	}
+
+	public void addCourseFile(Course course, CourseFile file) {
+		for(Map.Entry<Period, HashMap<Course, Mark>> entry : marksOfCourses.entrySet()) {
+			for(Map.Entry<Course, Mark> courseMark : entry.getValue().entrySet()) {
+				if(courseMark.getKey().equals(course)) {
+					courseMark.getKey().addCourseFile(file);
+					return;
+				}
+			}
+		}
 	}
 }
