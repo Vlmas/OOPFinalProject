@@ -16,6 +16,7 @@ public class TeacherView extends UserView {
                 "|1| View personal data\n"+
                 "|2| View courses\n" +
                 "|3| Send message\n"+
+                "|4| View news\n" +
                 "|X| Cancel\n"+
                 "-----------------------"
         );
@@ -39,7 +40,8 @@ public class TeacherView extends UserView {
             case "1" -> viewPersonalData();
             case "2" -> viewCourses();
             case "3" -> sendMessage();
-            case "4", "x", "q", "exit", "quit" -> {
+            case "4" -> viewNews();
+            case "5", "x", "q", "exit", "quit" -> {
                 System.out.println("Logging out.. Goodbye, " + teacher.getName() + "!");
                 return false;
             }
@@ -88,6 +90,10 @@ public class TeacherView extends UserView {
     }
 
     private void viewStudents(Course course) {
+        if(Database.getInstance().getStudents().isEmpty()) {
+            System.out.println("No students for this course yet");
+            return;
+        }
         int index = 1;
         for(Student student : Database.getInstance().getStudents()) {
             if(student.getTranscript().getCourses().contains(course)) {

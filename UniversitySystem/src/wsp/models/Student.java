@@ -42,7 +42,7 @@ public class Student extends User implements CanRateTeacher {
 	private Transcript transcript;
 
 	/**
-	 *
+	 * Student's books to read.
 	 */
 	private ArrayList<Book> books;
 	

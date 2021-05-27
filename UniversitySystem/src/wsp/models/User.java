@@ -114,7 +114,7 @@ public abstract class User implements Cloneable, Serializable, Comparable<User> 
 
 	@Override
 	public String toString() {
-		return (id + "| " + name.charAt(0) + ". " + surname + " (" + getClass().getSimpleName()
+		return (id + "| " + name + " " + surname + " (" + getClass().getSimpleName()
 				+ "). Login: " + login + ", Password: " + password);
 	}
 }

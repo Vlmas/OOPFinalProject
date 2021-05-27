@@ -17,6 +17,7 @@ public class LibrarianView extends UserView {
                 "-----------------\n" +
                 "|1| View library\n" +
                 "|2| Order a book\n" +
+                "|3| View news\n" +
                 "|X| Logout\n" +
                 "-----------------"
         );
@@ -33,7 +34,8 @@ public class LibrarianView extends UserView {
         switch(choice.toLowerCase()) {
             case "1" -> viewLibrary();
             case "2" -> orderBook();
-            case "3", "x", "q", "exit", "quit" -> {
+            case "3" -> viewNews();
+            case "4", "x", "q", "exit", "quit" -> {
                 System.out.println("Logging out.. Goodbye, " + librarian.getName() + "!");
                 return false;
             }

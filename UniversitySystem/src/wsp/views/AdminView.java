@@ -19,6 +19,7 @@ public class AdminView extends UserView {
                 "|3| Delete user\n" +
                 "|4| Update user\n" +
                 "|5| View logs about user actions\n" +
+                "|6| View news\n" +
                 "|X| Logout\n" +
                 "---------------------------------"
         );
@@ -38,7 +39,8 @@ public class AdminView extends UserView {
             case "3" -> removeUser();
             case "4" -> updateUser();
             case "5" -> viewUserActions();
-            case "6", "x", "q", "exit", "quit" -> {
+            case "6" -> viewNews();
+            case "7", "x", "q", "exit", "quit" -> {
                 System.out.println("Logging out.. Goodbye, " + admin.getName() + "!");
                 return false;
             }

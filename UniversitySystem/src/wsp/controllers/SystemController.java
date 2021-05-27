@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class SystemController {
-    public SystemController() throws InterruptedException, IOException {
+    public SystemController() throws InterruptedException {
         displayGreetingMessage();
         loadProgress();
     }
@@ -146,7 +146,7 @@ public class SystemController {
         Database.save();
     }
 
-    public void loadProgress() throws IOException {
+    public void loadProgress() {
         Database.load();
     }
 }

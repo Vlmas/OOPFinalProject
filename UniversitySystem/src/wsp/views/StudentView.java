@@ -206,10 +206,6 @@ public class StudentView extends UserView {
         }
     }
 
-    public void viewNews() {
-        Util.viewNews();
-    }
-
     public void manageBooks() throws IOException {
         ArrayList<Book> books = student.getBooks();
         Librarian librarian = (Librarian) Database.getInstance().getLibrarians().toArray()[0];

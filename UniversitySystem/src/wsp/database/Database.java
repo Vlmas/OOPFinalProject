@@ -84,6 +84,7 @@ public class Database implements Serializable {
 		initializeCourses();
 		initializeUsers();
 		addNews(new News("WSP started its work!", "Great times are ahead, enjoy!!", new ArrayList<>() {{ add(Util.COLOR_WHITE + "That's very cool." + Util.COLOR_RESET); add(Util.COLOR_WHITE + "Nice, I'm happy." + Util.COLOR_RESET); }}, new Date()));
+		addNews(new News("Postponement of Senior Lector Beisenbek's classes", "Postponed to 11 April", new ArrayList<>() , new Date()));
 	}
 
 	private void initializeLoginPasswords() {
@@ -121,8 +122,11 @@ public class Database implements Serializable {
 		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin", "admin", 500000));
 		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>(), 0));
 		addUser(new Manager("Nazym", "Aidarkhanova", "MAIN1MNG", "n_aidarkhanova", "Nazym", 450000, ManagerType.OR));
-		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
 		addUser(new Librarian("Lib", "Lib", "LIB", "libr", "Book", 400000, new HashMap<>()));
+		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
+		addUser(new Student("Zamira", "Rystygul", "19B030479", "z_rystygul", "ZZZ", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
+		addUser(new Student("Nurdaulet", "Altynbek", "19B030175", "n_altynbek", "NNN", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
+		addUser(new Student("Altynbek", "Musakhan", "19B030240", "a_musakhan", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
 	}
 
 	private void initializeCourses() {

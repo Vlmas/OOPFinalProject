@@ -34,4 +34,8 @@ public abstract class UserView {
     public void setMenu(String menu) {
         this.menu = menu;
     }
+
+    public void viewNews() {
+        Util.viewNews();
+    }
 }

@@ -153,6 +153,7 @@ public class ManagerView extends UserView {
 
         if(!teachers.get(teacherChoice).getCourses().contains(courses.get(courseChoice))) {
             teachers.get(teacherChoice).getCourses().add(courses.get(courseChoice));
+            System.out.println("Course has been assigned!");
         } else {
             System.out.println("Course is already assigned!");
         }
@@ -164,8 +165,12 @@ public class ManagerView extends UserView {
 
     public void readMessages() {
         ArrayList<Message> messages = Database.getInstance().getMessagesOf(manager);
-        System.out.println("Incoming messages from:");
-        Util.printList(messages);
+        if(!messages.isEmpty()) {
+            System.out.println("Incoming messages from:");
+            Util.printList(messages);
+            return;
+        }
+        System.out.println("No incoming messages yet..");
     }
 
     public void createReport() {
@@ -198,6 +203,7 @@ public class ManagerView extends UserView {
             performance = "Poor";
         }
         manager.generateReport(fileName, students.size(), fitStudents, mcmStudents, bsStudents, averageGpa, performance);
+        System.out.println("Report has been created! You can view it in the root directory");
     }
 
     public void manageNews() throws IOException {
