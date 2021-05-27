@@ -50,7 +50,7 @@ public class Teacher extends Employee implements CanAlterCourseData {
 		this.experience = experience;
 		this.courses = courses;
 		this.rating = rating;
-		ratedBy = 0;
+		this.ratedBy = 0;
 	}
 	
 	public TeacherTitle getTitle() {

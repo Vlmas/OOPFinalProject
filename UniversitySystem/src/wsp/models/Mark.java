@@ -13,14 +13,6 @@ public class Mark implements Serializable {
 
 	public Mark() {}
 
-	public Mark(double firstAttestation, double secondAttestation, double finalExam) {
-		if(firstAttestation > 30 || secondAttestation > 30 || finalExam > 40
-				|| (firstAttestation == secondAttestation && secondAttestation == finalExam && finalExam < 0)) {
-			throw new IllegalArgumentException("Illegal values for attestations!");
-		}
-		setMarks(firstAttestation, secondAttestation, finalExam);
-	}
-
 	private Grade determineLetter() {
 		if(overallDigital <= 100 && overallDigital >= 95) {
 			return Grade.A;
@@ -109,6 +101,10 @@ public class Mark implements Serializable {
 	}
 
 	public void setMarks(double firstAttestation, double secondAttestation, double finalExam) {
+		if((firstAttestation + secondAttestation > 60) || finalExam > 40
+				|| (firstAttestation == secondAttestation && secondAttestation == finalExam && finalExam < 0)) {
+			throw new IllegalArgumentException("Illegal values for attestations!");
+		}
 		setFirstAttestation(firstAttestation);
 		setSecondAttestation(secondAttestation);
 		setFinalExam(finalExam);

@@ -3,9 +3,11 @@ package wsp.views;
 import wsp.comparators.*;
 import wsp.database.Database;
 import wsp.enums.AttestationSeason;
+import wsp.enums.LessonType;
 import wsp.models.*;
 import wsp.utils.Util;
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,7 +137,49 @@ public class ManagerView extends UserView {
         System.out.print("Course credits: ");
         int credits = Integer.parseInt(Util.reader.readLine());
 
-        Course course = new Course(name, description, code, faculties.get(choice).getName(), credits, new ArrayList<>());
+        ArrayList<Lesson> lessons = new ArrayList<>();
+        System.out.print("Enter quantity of lessons (can't be more than 4): ");
+        int quantity = Integer.parseInt(Util.reader.readLine());
+        LessonType type;
+        DayOfWeek day;
+        String[] startTime;
+        String[] endTime;
+        if(quantity > 4) {
+            System.out.println("Invalid input");
+            return;
+        }
+        for(int i = 0; i < quantity; i++) {
+            System.out.println("Enter the lesson type:\n|1| Lecture |2| Practice |3| Laboratory");
+            switch(Util.reader.readLine()) {
+                case "1" -> type = LessonType.LECTURE;
+                case "2" -> type = LessonType.PRACTICE;
+                case "3" -> type = LessonType.LAB;
+                default -> {
+                    System.out.println("Invalid input");
+                    return;
+                }
+            }
+            System.out.println("Enter the day of the week:\n|1| Monday |2| Tuesday |3| Wednesday |4| Thursday |5| Friday |6| Saturday");
+            switch(Util.reader.readLine()) {
+                case "1" -> day = DayOfWeek.MONDAY;
+                case "2" -> day = DayOfWeek.TUESDAY;
+                case "3" -> day = DayOfWeek.WEDNESDAY;
+                case "4" -> day = DayOfWeek.THURSDAY;
+                case "5" -> day = DayOfWeek.FRIDAY;
+                case "6" -> day = DayOfWeek.SATURDAY;
+                default -> {
+                    System.out.println("Invalid input");
+                    return;
+                }
+            }
+            System.out.print("Enter lesson's starting time (like this -> HH:MM): ");
+            startTime = Util.reader.readLine().split(":");
+            System.out.print("Enter lesson's ending time (like this -> HH:MM): ");
+            endTime = Util.reader.readLine().split(":");
+            lessons.add(new Lesson(type, day, Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1]), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1])));
+            System.out.println("\nLesson has been added!");
+        }
+        Course course = new Course(name, description, code, faculties.get(choice).getName(), credits, lessons);
         manager.addCourse(course);
         System.out.println("Course was successfully added");
     }
