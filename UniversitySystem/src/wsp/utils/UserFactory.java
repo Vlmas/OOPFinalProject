@@ -83,7 +83,6 @@ public class UserFactory {
 
     public Student createStudent() throws IOException {
         getUserData();
-
         boolean valid;
 
         do {
@@ -172,26 +171,17 @@ public class UserFactory {
 
         do {
             System.out.println("Select student specialty: ");
-            Object[] specialties = faculty.getSpecialties().toArray();
-
-            for(int i = 0; i < specialties.length; i++) {
-                System.out.println("|" + (i + 1) + "| " + ((Specialty) specialties[i]).getName());
-            }
+            ArrayList<Specialty> specialties = faculty.getSpecialties();
+            Util.printList(specialties);
 
             int choice = Util.parseChoice(Util.reader.readLine());
-            if(choice < 0) {
-                System.out.println("Not proper value, enter a proper value");
-                continue;
-            }
-
-            if(Util.isInRange(choice, 0, specialties.length - 1)) {
-                specialty = (Specialty) specialties[choice];
-                valid = true;
-            } else {
+            if(choice < 0 || !Util.isInRange(choice, 0, specialties.size() - 1)) {
                 System.out.println("Not proper value, enter a proper value");
                 valid = false;
+                continue;
             }
-
+            specialty = specialties.get(choice);
+            valid = true;
         } while(!valid);
 
         return new Student(name, surname, id, login, password, yearOfStudy,
@@ -218,10 +208,10 @@ public class UserFactory {
     }
 
     public String generateLogin(String name, String surname) {
-        return name.toLowerCase().charAt(0) + "_" + surname.toLowerCase() + "@kbtu.kz";
+        return name.toLowerCase().charAt(0) + "_" + surname.toLowerCase();
     }
 
-    public String generatePassword() {
+    private String generatePassword() {
         StringBuilder password = new StringBuilder();
 
         int i = 0;
@@ -229,7 +219,6 @@ public class UserFactory {
             password.append(randomChar());
             i++;
         }
-
         return password.toString();
     }
 

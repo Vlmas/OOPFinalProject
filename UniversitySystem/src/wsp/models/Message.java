@@ -1,77 +1,19 @@
 package wsp.models;
 
 import wsp.enums.MessageType;
-
+import wsp.utils.Util;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
 public class Message implements Serializable {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Employee from;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Employee to;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	private MessageType type;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	private String content;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private boolean signed;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Date postDate;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Message() {
-		super();
-	}
+
+	public Message() {}
 
 	public Message(Employee from, Employee to, MessageType type, String content, boolean signed, Date postDate) {
 		this.from = from;
@@ -82,67 +24,36 @@ public class Message implements Serializable {
 		this.postDate = postDate;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public String getContent() {
-		// TODO implement me
 		return content;
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public Date getPostDate() {
-		// TODO implement me
 		return postDate;
 	}
 
 	public MessageType getType() {
 		return type;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	public boolean isSigned() {
-		// TODO implement me
 		return signed;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	public Employee fromWho() {
-		// TODO implement me
 		return from;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	public Employee toWho() {
-		// TODO implement me
 		return to;
+	}
+
+	@Override
+	public String toString() {
+		return (
+				"From " + fromWho().getName() + " " + fromWho().getSurname() + ", " + fromWho().getClass().getSimpleName() +
+				"\nMessage type: " + Util.COLOR_RED + type + Util.COLOR_RESET + "\nIs signed by the dean: " +
+				(signed ? "Yes\n" : "No\n") + "Post date: " + postDate + "\nMessage content: " + content + "\n"
+		);
 	}
 }

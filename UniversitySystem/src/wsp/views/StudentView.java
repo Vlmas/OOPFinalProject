@@ -22,6 +22,7 @@ public class StudentView extends UserView {
                 "|5| Rate teacher\n" +
                 "|6| Download transcript\n" +
                 "|7| View news\n" +
+                "|8| Manage books\n" +
                 "|X| Logout\n" +
                 "--------------------------"
         );
@@ -43,7 +44,8 @@ public class StudentView extends UserView {
             case "5" -> rateTeacher();
             case "6" -> downloadTranscript();
             case "7" -> viewNews();
-            case "8", "x", "q", "exit", "quit" -> {
+            case "8" -> manageBooks();
+            case "9", "x", "q", "exit", "quit" -> {
                 System.out.println("Logging out.. Goodbye, " + student.getName() + "!");
                 return false;
             }
@@ -70,7 +72,6 @@ public class StudentView extends UserView {
 
     public void viewCourses() throws IOException, InterruptedException {
         System.out.println("\nList of all courses: ");
-
         ArrayList<Course> courses = new ArrayList<>(Database.getInstance().getCourses());
         int index = 1;
 
@@ -86,26 +87,17 @@ public class StudentView extends UserView {
             System.out.println((index) + ") " + course);
             index++;
         }
-
         System.out.println("\nChoose a course to view some of its details, or X to skip");
         String chosen = Util.reader.readLine();
-        if(chosen.equalsIgnoreCase("X")) {
-            System.out.println("Operation was skipped");
-            return;
-        }
 
         int choice = Util.parseChoice(chosen);
-        if(choice < 0) {
-            System.out.println("Out of range of courses list");
+        if(choice < 0 || !Util.isInRange(choice, 0, courses.size() - 1)) {
+            System.out.println("Operation was skipped or interrupted");
             return;
         }
-        if(Util.isInRange(choice, 0, courses.size() - 1)) {
-            viewCourseDetails(courses.get(choice));
-            Thread.sleep(500);
-            viewCourses();
-        } else {
-            System.out.println("Out of range of courses list");
-        }
+        viewCourseDetails(courses.get(choice));
+        Thread.sleep(500);
+        viewCourses();
     }
 
     public void registerForCourse() throws IOException, InterruptedException {
@@ -123,39 +115,35 @@ public class StudentView extends UserView {
                 System.out.println((i + 1) + ") " + courses.get(i) + ". Credits: " + courses.get(i).getCreditsAmount());
             }
         }
-
         System.out.print("\nSelect the course to register: ");
+
         int choice = Util.parseChoice(Util.reader.readLine());
-        if(choice < 0) {
+        if(choice < 0 || !Util.isInRange(choice, 0, courses.size() - 1)) {
             System.out.println("Invalid input");
             return;
         }
-        if(Util.isInRange(choice, 0, courses.size() - 1)) {
-            if(student.getTranscript().getCourses().contains(courses.get(choice))) {
-                System.out.println("Course is already registered");
-                return;
-            }
-            if(Database.getInstance().getCourseRegistrationRequests().containsKey(student)) {
-                if (Database.getInstance().getCourseRegistrationRequests().get(student).contains(courses.get(choice))) {
-                    System.out.println("Registration request is already sent");
-                    return;
-                }
-            }
-            if(courses.get(choice).getCreditsAmount() + creditsSum > 21) {
-                System.out.println("Impossible to register, limit of credits exceeded");
-                return;
-            }
-            Database.getInstance().addCourseRegistrationRequest(student, courses.get(choice));
-            System.out.println("Your request has been accepted! Waiting for manager's approval..");
-            Thread.sleep(500);
-        } else {
-            System.out.println("Unexpected input");
+        if(student.getTranscript().getCourses().contains(courses.get(choice))) {
+            System.out.println("Course is already registered");
+            return;
         }
+        if(Database.getInstance().getCourseRegistrationRequests().containsKey(student)) {
+            if(Database.getInstance().getCourseRegistrationRequests().get(student).contains(courses.get(choice))) {
+                System.out.println("Registration request is already sent");
+                return;
+            }
+        }
+        if(courses.get(choice).getCreditsAmount() + creditsSum > 21) {
+            System.out.println("Impossible to register, limit of credits exceeded");
+            return;
+        }
+        Database.getInstance().addCourseRegistrationRequest(student, courses.get(choice));
+        System.out.println("Your request has been accepted! Waiting for manager's approval..");
+        Thread.sleep(500);
     }
 
     public void viewTranscript() {
         System.out.println("Your overall GPA: " + student.getTranscript().determineOverallGpa());
-        System.out.println("Course; First attestation; Second attestation; Final points; Overall; Course GPA");
+        System.out.println("Course; First attestation; Second attestation; Final points; Overall; Letter; GPA");
         for(Map.Entry<Period, HashMap<Course, Mark>> entry : student.getTranscript().getMarks().entrySet()) {
             System.out.println(entry.getKey() + ":");
             int index = 1;
@@ -171,7 +159,6 @@ public class StudentView extends UserView {
         ArrayList<Course> courses = student.getTranscript().getCourses();
         if(!courses.isEmpty()) {
             System.out.println("Your courses: ");
-
             Util.printList(courses);
             System.out.print("\nWhich course teachers you wish to rate: ");
             int choice = Util.parseChoice(Util.reader.readLine());
@@ -221,6 +208,52 @@ public class StudentView extends UserView {
 
     public void viewNews() {
         Util.viewNews();
+    }
+
+    public void manageBooks() throws IOException {
+        ArrayList<Book> books = student.getBooks();
+        Librarian librarian = (Librarian) Database.getInstance().getLibrarians().toArray()[0];
+        if(books.isEmpty()) {
+           System.out.println("You don't have any books yet");
+        } else {
+            System.out.println("Your books:");
+            Util.printList(books);
+        }
+        System.out.println("\nWhat to you wish to do?\n|1| Get a new book |2| Hand over my book |X| Cancel");
+
+        int choice;
+        switch(Util.reader.readLine()) {
+            case "1" -> {
+                System.out.println("Which book do you wish to add:");
+                Util.printList(librarian.getLibrary().keySet());
+                choice = Util.parseChoice(Util.reader.readLine());
+                if(choice < 0 || !Util.isInRange(choice, 0, librarian.getLibrary().size())) {
+                    System.out.println("Operation was interrupted");
+                    return;
+                }
+                int index = 0;
+                for(Map.Entry<Book, Integer> bookAmount : librarian.getLibrary().entrySet()) {
+                    if(index == choice) {
+                        student.addBook(bookAmount.getKey());
+                        librarian.getLibrary().put(bookAmount.getKey(), bookAmount.getValue() - 1);
+                        break;
+                    }
+                    index++;
+                }
+            }
+            case "2" -> {
+                System.out.println("Which book do you wish to hand over:");
+                Util.printList(student.getBooks());
+                choice = Util.parseChoice(Util.reader.readLine());
+                if(choice < 0 || !Util.isInRange(choice, 0, student.getBooks().size())) {
+                    System.out.println("Operation was interrupted");
+                    return;
+                }
+                librarian.getLibrary().merge(student.getBooks().get(choice), 1, Integer::sum);
+                student.handOverBook(student.getBooks().get(choice));
+            }
+            default -> System.out.println("Operation was interrupted");
+        }
     }
 
     public void viewCourseDetails(Course course) throws IOException {

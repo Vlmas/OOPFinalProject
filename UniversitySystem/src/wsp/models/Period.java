@@ -3,36 +3,11 @@ package wsp.models;
 import wsp.enums.AttestationSeason;
 import java.io.Serializable;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
 public class Period implements Serializable, Comparable<Period> {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	private int year;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	private AttestationSeason season;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Period() {
-		super();
-	}
+
+	public Period() {}
 
 	public Period(int year, AttestationSeason season) {
 		this.year = year;
@@ -40,12 +15,10 @@ public class Period implements Serializable, Comparable<Period> {
 	}
 	
 	public int getYear() {
-		// TODO implement me
 		return year;
 	}
 
 	public AttestationSeason getSeason() {
-		// TODO implement me
 		return season;
 	}
 

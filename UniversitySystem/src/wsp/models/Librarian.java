@@ -3,30 +3,21 @@ package wsp.models;
 import java.util.*;
 
 /**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
+ * WSP University System's Librarian model. Has a library (University property), can order books and view the library.
+ *
+ * @see Book
  */
-
 public class Librarian extends Employee {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Represents the library, where key is a book, and value is amount of books of this kind left in the library.
 	 */
-	
 	private HashMap<Book, Integer> library;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Librarian() {
-		super();
-	}
 
+	public Librarian() {}
+
+	/**
+	 * Creates the librarian with base User and Employee fields, then specific {@code HashMap} field for the library.
+	 */
 	public Librarian(String name, String surname, String id, String login, String password,
 					 double salary, HashMap<Book, Integer> library) {
 		super(name, surname, id, login, password, salary);
@@ -34,29 +25,10 @@ public class Librarian extends Employee {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Retrieves the library.
+	 *
+	 * @return library as map of books and integer values representing quantity
 	 */
-	
-	public Book giveBook(Book book) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void orderBook() {
-		// TODO implement me
-
-	}
-
 	public HashMap<Book, Integer> getLibrary() {
 		return library;
 	}

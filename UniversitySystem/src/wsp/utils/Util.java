@@ -42,7 +42,6 @@ public class Util implements Serializable {
 
         if(!allNews.isEmpty()) {
             int index = 1;
-
             for(News news : allNews) {
                 System.out.println(COLOR_GREEN + "|" + index + "| " + news.getTitle() + ". " + news.getPostDate() + COLOR_RESET);
                 System.out.println("Content: " + news.getContent());
@@ -71,7 +70,16 @@ public class Util implements Serializable {
         }
     }
 
-    public static void sendMessage(Employee sender, Employee receiver) throws IOException, InterruptedException {
+    public static void sendMessage(Employee sender) throws IOException, InterruptedException {
+        System.out.println("Choose employee, or X to cancel:");
+        ArrayList<Employee> employees = new ArrayList<>(Database.getInstance().getEmployees());
+        printUserList(employees);
+        int choice = parseChoice(reader.readLine());
+        if(choice < 0) {
+            System.out.println("Invalid input");
+            return;
+        }
+
         MessageType type = null;
         if(sender instanceof Teacher) {
             System.out.println("What type is your message?\n|1| Letter\n|2| Request");
@@ -84,7 +92,7 @@ public class Util implements Serializable {
         String content = reader.readLine();
         boolean isSigned = false;
 
-        if(sender instanceof Teacher && receiver instanceof Manager && type == MessageType.REQUEST) {
+        if(sender instanceof Teacher && employees.get(choice) instanceof Manager && type == MessageType.REQUEST) {
             System.out.println("Seems you are sending a request to a manager. It's highly recommended to put dean's sign on it, but it will take some time");
             System.out.println("Will you sign it?\n|1| Yes |2| No");
             switch(reader.readLine()) {
@@ -96,7 +104,7 @@ public class Util implements Serializable {
                 case "2" -> System.out.println("Okay");
             }
         }
-        Message message = new Message(sender, receiver, type, content, isSigned, new Date());
+        Message message = new Message(sender, employees.get(choice), type, content, isSigned, new Date());
         Database.getInstance().addMessage(message);
         System.out.println("Message has been sent!");
     }

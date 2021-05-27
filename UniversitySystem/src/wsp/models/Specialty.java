@@ -2,56 +2,25 @@ package wsp.models;
 
 import java.io.Serializable;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
 public class Specialty implements Serializable {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String name;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Specialty() {
-		super();
-	}
+
+	public Specialty() {}
 
 	public Specialty(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public String getName() {
-		// TODO implement me
 		return name;
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public void setName(String name) {
-		// TODO implement me
+		this.name = name;
+	}
 
+	@Override
+	public String toString() {
+		return name;
 	}
 }

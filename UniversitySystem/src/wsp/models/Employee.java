@@ -1,90 +1,42 @@
 package wsp.models;
 
 /**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
+ * WSP System's Employee model. Represents the User which works in the University. This class is abstract and can't be
+ * instantiated. Workers have extra field called salary.
+ *
+ * @see User
+ * @see Admin
+ * @see Manager
+ * @see Teacher
+ * @see Librarian
  */
-
 public abstract class Employee extends User {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
+	 * Salary of the worker in tenges.
 	 */
-	
 	private double salary;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Employee() {
-		super();
-	}
 
+	public Employee() {}
+
+	/**
+	 * Constructor for creating inherited instances of {@code Employee} class. This constructor can't be used to
+	 * create {@code Employee} instance itself, since it is abstract, but can be used in child classes. Given user
+	 * specific fields and Employee's salary.
+	 */
 	public Employee(String name, String surname, String id, String login, String password, double salary) {
 
 		super(name, surname, id, login, password);
 		this.salary = salary;
 	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void sendMessage(Message message) {
-
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public String readMessages() {
-		// TODO implement me
-		return null;
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	public double getSalary() {
-		// TODO implement me
 		return salary;
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public void setSalary(double salary) {
-		// TODO implement me
-
+		this.salary = salary;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	public Object clone() throws CloneNotSupportedException {
 		Employee employee = (Employee) super.clone();
 		employee.salary = salary;

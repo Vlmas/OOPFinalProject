@@ -3,18 +3,7 @@ package wsp.comparators;
 import wsp.models.Employee;
 import java.util.Comparator;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
 public class SalaryComparator implements Comparator<Employee> {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
 	public SalaryComparator() {
 		super();
 	}

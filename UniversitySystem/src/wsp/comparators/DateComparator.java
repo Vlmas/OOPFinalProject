@@ -3,18 +3,7 @@ package wsp.comparators;
 import wsp.models.Message;
 import java.util.Comparator;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
 public class DateComparator implements Comparator<Message> {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
 	public DateComparator() {
 		super();
 	}

@@ -2,6 +2,7 @@ package wsp.models;
 
 import wsp.enums.*;
 import wsp.interfaces.CanRateTeacher;
+import java.util.ArrayList;
 
 /**
  * WSP University System's Student model. Represents the casual student of University.
@@ -39,6 +40,11 @@ public class Student extends User implements CanRateTeacher {
 	 * Student's transcript. Represents the academic performance.
 	 */
 	private Transcript transcript;
+
+	/**
+	 *
+	 */
+	private ArrayList<Book> books;
 	
 	/**
 	 * GPA (Grade Point Average) - the measure of student's academic performance.
@@ -61,6 +67,7 @@ public class Student extends User implements CanRateTeacher {
 		this.specialty = specialty;
 		this.transcript = transcript;
 		this.gpa = gpa;
+		this.books = new ArrayList<>();
 	}
 
 	public YearOfStudy getYearOfStudy() {
@@ -81,6 +88,10 @@ public class Student extends User implements CanRateTeacher {
 
 	public Transcript getTranscript() {
 		return transcript;
+	}
+
+	public ArrayList<Book> getBooks() {
+		return books;
 	}
 
 	public void setDegree(Degree degree) {
@@ -120,6 +131,24 @@ public class Student extends User implements CanRateTeacher {
 	@Override
 	public void rateTeacher(Teacher teacher, double rating) {
 		teacher.setRating(rating);
+	}
+
+	/**
+	 * Adds the given to book to student's collection.
+	 *
+	 * @param book book to add
+	 */
+	public void addBook(Book book) {
+		books.add(book);
+	}
+
+	/**
+	 * Returns the book back to library, thus deletes from student's collection.
+	 *
+	 * @param book book to hand over
+	 */
+	public void handOverBook(Book book) {
+		books.remove(book);
 	}
 
 	/**

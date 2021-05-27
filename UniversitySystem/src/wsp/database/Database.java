@@ -118,11 +118,11 @@ public class Database implements Serializable {
 	}
 
 	private void initializeUsers() {
-		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin@kbtu.kz", "admin", 500000));
-		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi@kbtu.kz", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>(courses), 0));
-		addUser(new Manager("Nazym", "Aidarkhanova", "MAIN1MNG", "n_aidarkhanova@kbtu.kz", "Nazym", 450000, ManagerType.OR));
-		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov@kbtu.kz", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
-		addUser(new Librarian("Lib", "Lib", "LIB", "libr@kbtu.kz", "Book", 400000, new HashMap<>()));
+		addUser(new Admin("Admin", "Admin", "MAIN1ADM", "admin", "admin", 500000));
+		addUser(new Teacher("Pakita", "Shamoi", "TCH", "p_shamoi", "Pakita", 900000, TeacherTitle.PROFESSOR, 10, new ArrayList<>(), 0));
+		addUser(new Manager("Nazym", "Aidarkhanova", "MAIN1MNG", "n_aidarkhanova", "Nazym", 450000, ManagerType.OR));
+		addUser(new Student("Almas", "Alemarov", "19B030614", "a_alemarov", "AAA", YearOfStudy.SECOND, Degree.BACHELOR, getFaculty(FacultyName.FIT), getFaculty(FacultyName.FIT).getSpecialties().get(0), new Transcript(), 0));
+		addUser(new Librarian("Lib", "Lib", "LIB", "libr", "Book", 400000, new HashMap<>()));
 	}
 
 	private void initializeCourses() {
@@ -132,8 +132,7 @@ public class Database implements Serializable {
 				"CSCI2106",
 				FacultyName.FIT,
 				3,
-				new ArrayList<>(),
-				new ArrayList<>() {{
+					new ArrayList<>() {{
 					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 14, 0, 15, 0));
 					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 15, 0, 16, 0));
 					add(new Lesson(LessonType.PRACTICE, DayOfWeek.TUESDAY, 16, 0, 17, 0));
@@ -147,8 +146,7 @@ public class Database implements Serializable {
 				"PHYS2102",
 				FacultyName.GEF,
 				3,
-				new ArrayList<>(),
-				new ArrayList<>() {{
+					new ArrayList<>() {{
 					add(new Lesson(LessonType.LECTURE, DayOfWeek.MONDAY, 14, 0, 15, 0));
 					add(new Lesson(LessonType.PRACTICE, DayOfWeek.THURSDAY, 12, 0, 13, 0));
 					add(new Lesson(LessonType.LAB, DayOfWeek.THURSDAY, 16, 0, 18, 0));
@@ -161,8 +159,7 @@ public class Database implements Serializable {
 				"CSCI1102",
 				FacultyName.SECMC,
 				3,
-				new ArrayList<>(),
-				new ArrayList<>() {{
+					new ArrayList<>() {{
 					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 14, 0, 15, 0));
 					add(new Lesson(LessonType.LECTURE, DayOfWeek.TUESDAY, 15, 0, 16, 0));
 					add(new Lesson(LessonType.PRACTICE, DayOfWeek.TUESDAY, 16, 0, 17, 0));
@@ -227,10 +224,10 @@ public class Database implements Serializable {
 	}
 	
 	/**
-	 * Adds the given user to Database. Firstly added to users set, then to corresponding section
+	 * Adds the given user to the Database. Firstly added to users set, then to corresponding section
 	 * of {@code loginsAndPasswords}.
 	 *
-	 * @param user user to add to Database
+	 * @param user user to add to the Database
 	 */
 	public void addUser(User user) {
 		users.add(user);
@@ -240,7 +237,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Removes the given user from Database. Firstly removed from users set, then from corresponding section
+	 * Removes the given user from the Database. Firstly removed from users set, then from corresponding section
 	 * of {@code loginsAndPasswords}.
 	 *
 	 * @param user user to remove from Database
@@ -391,6 +388,15 @@ public class Database implements Serializable {
 		}
 		return null;
 	}
+
+	/**
+	 * Retrieves all faculties from Database
+	 *
+	 * @return set of faculties
+	 */
+	public HashSet<Faculty> getFaculties() {
+		return faculties;
+	}
 	
 	/**
 	 * Retrieves all user log actions.
@@ -456,7 +462,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Adds employee message to Database.
+	 * Adds employee message to the Database.
 	 *
 	 * @param message message to add
 	 */
@@ -465,7 +471,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Adds given user log action to Database.
+	 * Adds given user log action to the Database.
 	 *
 	 * @param action action to add
 	 */
@@ -474,7 +480,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Adds given course to Database.
+	 * Adds given course to the Database.
 	 *
 	 * @param course course to add
 	 */
@@ -492,7 +498,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Adds given request for registration to Database.
+	 * Adds given request for registration to the Database.
 	 *
 	 * @param student sender of the request
 	 * @param course requested course
@@ -503,7 +509,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Returns the list of news in Database. Is managed by a manager.
+	 * Returns the list of news in the Database. Is managed by a manager.
 	 *
 	 * @return list of news
 	 */
@@ -512,7 +518,7 @@ public class Database implements Serializable {
 	}
 
 	/**
-	 * Adds the given news to Database.
+	 * Adds the given news to the Database.
 	 *
 	 * @param news news to add
 	 */
@@ -540,11 +546,9 @@ public class Database implements Serializable {
 
 	/**
 	 * Loads (deserializes) previously saved state of the Database. Is assigned to {@code instance}
-	 * itself, not creating auxiliary instances of Database.
-	 *
-	 * @throws IOException when some inner processes are interrupted or corrupted
+	 * itself, not creating auxiliary instances of the Database.
 	 */
-	public static void load() throws IOException {
+	public static void load() {
 		try {
 			FileInputStream file = new FileInputStream("db.out");
 			ObjectInputStream obj = new ObjectInputStream(file);

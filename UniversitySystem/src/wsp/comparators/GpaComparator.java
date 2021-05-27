@@ -1,21 +1,9 @@
 package wsp.comparators;
 
 import wsp.models.Student;
-
 import java.util.Comparator;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
 public class GpaComparator implements Comparator<Student> {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
 	public GpaComparator() {
 		super();
 	}

@@ -1,10 +1,5 @@
 package wsp.enums;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
 public enum Grade {
 	A,
 	A_MINUS,
@@ -16,5 +11,5 @@ public enum Grade {
 	C_MINUS,
 	D_PLUS,
 	D,
-	F;
+	F
 }

@@ -33,7 +33,6 @@ public class SystemController {
     public String chooseLogInUser() throws IOException, InterruptedException {
         System.out.println("\nPlease, select the type of user to log in, or X to exit:");
         System.out.println("--------------\n|1| Admin\n|2| Manager\n|3| Teacher\n|4| Librarian\n|5| Student\n|X| Exit\n--------------");
-
         String choice = Util.reader.readLine();
 
         switch(choice.toLowerCase()) {

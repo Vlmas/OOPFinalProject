@@ -5,9 +5,7 @@ import wsp.database.Database;
 import wsp.enums.AttestationSeason;
 import wsp.models.*;
 import wsp.utils.Util;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class ManagerView extends UserView {
 
     @Override
     public void greet() {
-        System.out.println("Welcome, " + manager.getName() + "!");
+        System.out.println("Welcome, " + manager.getType() + " manager " + manager.getName() + "!");
         Database.getInstance().addUserAction("User " + manager.getName() + " (Manager) logged in at " + new Date().toString());
     }
 
@@ -53,8 +51,8 @@ public class ManagerView extends UserView {
             case "3" -> approveRegistration();
             case "4" -> addCourse();
             case "5" -> assignCourseToTeacher();
-            case "6" -> sendMessage();
-            case "7" -> readMessages();
+            case "6" -> readMessages();
+            case "7" -> sendMessage();
             case "8" -> createReport();
             case "9" -> manageNews();
             case "10", "x", "q", "exit", "quit" -> {
@@ -97,7 +95,6 @@ public class ManagerView extends UserView {
 
         if(!requests.isEmpty()) {
             System.out.println("Incoming requests of students: ");
-
             int index = 1;
             for(Map.Entry<Student, ArrayList<Course>> request : requests.entrySet()) {
                System.out.println(index + ") " + request.getKey().getName() + " " + request.getKey().getSurname());
@@ -118,18 +115,58 @@ public class ManagerView extends UserView {
             } else {
                 System.out.println("Select from the given list!");
             }
+            return;
         }
         System.out.println("No incoming requests yet..");
         Thread.sleep(500);
     }
 
-    public void addCourse() {}
+    public void addCourse() throws IOException {
+        System.out.print("Enter the course data..\nCourse name: ");
+        String name = Util.reader.readLine();
+        System.out.print("Course description: ");
+        String description = Util.reader.readLine();
+        System.out.print("Course code: ");
+        String code = Util.reader.readLine();
+        System.out.println("Course faculty: ");
+        ArrayList<Faculty> faculties = new ArrayList<>(Database.getInstance().getFaculties());
+        Util.printList(faculties);
+        int choice = Util.parseChoice(Util.reader.readLine());
+        System.out.print("Course credits: ");
+        int credits = Integer.parseInt(Util.reader.readLine());
 
-    public void assignCourseToTeacher() {}
+        Course course = new Course(name, description, code, faculties.get(choice).getName(), credits, new ArrayList<>());
+        manager.addCourse(course);
+        System.out.println("Course was successfully added");
+    }
 
-    public void sendMessage() {}
+    public void assignCourseToTeacher() throws IOException {
+        ArrayList<Course> courses = new ArrayList<>(Database.getInstance().getCourses());
+        ArrayList<Teacher> teachers = new ArrayList<>(Database.getInstance().getTeachers());
 
-    public void readMessages() {}
+        System.out.println("Select the course: ");
+        Util.printList(courses);
+        int courseChoice = Util.parseChoice(Util.reader.readLine());
+        System.out.println("Now select the teacher to whom to assign the selected course:");
+        Util.printUserList(teachers);
+        int teacherChoice = Util.parseChoice(Util.reader.readLine());
+
+        if(!teachers.get(teacherChoice).getCourses().contains(courses.get(courseChoice))) {
+            teachers.get(teacherChoice).getCourses().add(courses.get(courseChoice));
+        } else {
+            System.out.println("Course is already assigned!");
+        }
+    }
+
+    public void sendMessage() throws IOException, InterruptedException {
+        Util.sendMessage(manager);
+    }
+
+    public void readMessages() {
+        ArrayList<Message> messages = Database.getInstance().getMessagesOf(manager);
+        System.out.println("Incoming messages from:");
+        Util.printList(messages);
+    }
 
     public void createReport() {
         ArrayList<Student> students = new ArrayList<>(Database.getInstance().getStudents());
@@ -160,22 +197,42 @@ public class ManagerView extends UserView {
         } else {
             performance = "Poor";
         }
+        manager.generateReport(fileName, students.size(), fitStudents, mcmStudents, bsStudents, averageGpa, performance);
+    }
 
-        try {
-            PrintWriter writer = new PrintWriter(new FileWriter(fileName, true));
-            writer.write(String.format("Total students: %d\n", students.size()));
-            writer.write(String.format("Total FIT students: %d\n", fitStudents));
-            writer.write(String.format("Total SECMC students: %d\n", mcmStudents));
-            writer.write(String.format("Total BS students: %d\n", bsStudents));
-            writer.write(String.format("Average GPA: %f\n", averageGpa));
-            writer.write(String.format("Academic performance status: %s", performance));
-            writer.close();
-        } catch(IOException exc) {
-            System.out.println("Unable to create a report, " + exc.getMessage());
+    public void manageNews() throws IOException {
+        ArrayList<News> allNews = Database.getInstance().getNews();
+        Util.viewNews();
+        if(!allNews.isEmpty()) {
+            System.out.println("\nWhich news do you wish to edit?");
+            int choice = Util.parseChoice(Util.reader.readLine());
+            if(choice < 0) {
+                System.out.println("Operation was cancelled");
+                return;
+            }
+            editNews(allNews.get(choice));
         }
     }
 
-    public void manageNews() {}
+    private void editNews(News news) throws IOException {
+        System.out.println("News: " + news.getTitle());
+        System.out.println("What do you wish to edit?\n|1| Title |2| Content |3| Clear comments");
+
+        switch(Util.reader.readLine()) {
+            case "1" -> {
+                System.out.print("Previous title: " + news.getTitle() + "\nEnter a new title: ");
+                news.setTitle(Util.reader.readLine());
+            }
+            case "2" -> {
+                System.out.print("Previous content: " + news.getTitle() + "\nEnter a new content: ");
+                news.setContent(Util.reader.readLine());
+            }
+            case "3" -> {
+                news.getComments().clear();
+                System.out.println("Comments are removed!");
+            }
+        }
+    }
 
     public void processRequest(Student student, ArrayList<Course> courses) throws IOException, InterruptedException {
         System.out.println("Check the request for correctness, if you find a mistake, reject the request. Courses:");

@@ -83,27 +83,16 @@ public class AdminView extends UserView {
 
         if(users.size() > 0) {
             System.out.println("Select which user to remove, or X to cancel:");
-
             Util.printList(users);
             System.out.println("X) Cancel");
 
-            String chosen = Util.reader.readLine();
-            if(chosen.equalsIgnoreCase("x")) {
+            int choice = Util.parseChoice(Util.reader.readLine());
+            if(choice < 0 || !Util.isInRange(choice, 0, users.size() - 1)) {
+                System.out.println("Operation was either cancelled or interrupted");
                 return;
             }
-
-            int choice = Util.parseChoice(chosen);
-            if(choice < 0) {
-                System.out.println("Invalid input was entered");
-                return;
-            }
-
-            if(Util.isInRange(choice, 0, users.size() - 1)) {
-                admin.removeUser((User) users.get(choice));
-                System.out.println("User has been removed!");
-            } else {
-                System.out.println("Invalid input, not in range of users");
-            }
+            admin.removeUser((User) users.get(choice));
+            System.out.println("User has been removed!");
             return;
         }
         System.out.println("There is currently no user to remove");
@@ -124,25 +113,14 @@ public class AdminView extends UserView {
         }
         System.out.println("X) Cancel");
 
-        String chosen = Util.reader.readLine();
-        if(chosen.equalsIgnoreCase("X")) {
-            System.out.println("Operation was cancelled");
+        int choice = Util.parseChoice(Util.reader.readLine());
+        if(choice < 0 || !Util.isInRange(choice, 0, users.size() - 1)) {
+            System.out.println("Operation was either cancelled or interrupted");
             return;
         }
-
-        int choice = Util.parseChoice(chosen);
-        if(choice < 0) {
-            System.out.println("Invalid input was entered");
-            return;
-        }
-
-        if(Util.isInRange(choice, 0, users.size() - 1)) {
-            UserRenovator renovator = new UserRenovator(users.get(choice));
-            renovator.updateUser();
-            System.out.println(users.get(choice));
-        } else {
-            System.out.println("Invalid input, not in range of users");
-        }
+        UserRenovator renovator = new UserRenovator(users.get(choice));
+        renovator.updateUser();
+        System.out.println(users.get(choice));
     }
 
     public void viewUserActions() throws IOException {
@@ -166,8 +144,7 @@ public class AdminView extends UserView {
     }
 
     public void viewUsers() {
-        HashSet<User> users = admin.getUsers();
-        Util.printUserList(users);
+        Util.printUserList(admin.getUsers());
     }
 
     private String determineUser(String chosenUser) {
