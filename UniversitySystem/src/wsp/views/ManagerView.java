@@ -113,6 +113,7 @@ public class ManagerView extends UserView {
                         processRequest(request.getKey(), request.getValue());
                         break;
                     }
+                    index++;
                 }
             } else {
                 System.out.println("Select from the given list!");

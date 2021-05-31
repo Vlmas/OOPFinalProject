@@ -12,13 +12,15 @@ public class TeacherView extends UserView {
 
     public TeacherView() {
         setMenu(
-                "-----------------------\n" +
-                "|1| View personal data\n"+
-                "|2| View courses\n" +
-                "|3| Send message\n"+
-                "|4| View news\n" +
-                "|X| Cancel\n"+
-                "-----------------------"
+                """
+                        -----------------------
+                        |1| View personal data
+                        |2| View courses
+                        |3| Send message
+                        |4| View news
+                        |X| Cancel
+                        -----------------------
+                """
         );
     }
 
